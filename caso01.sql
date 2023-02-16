@@ -312,7 +312,9 @@ insert into Clients (id_person) values (9);
 insert into Clients (id_person) values (10);
 insert into Clients (id_person) values (11);
 insert into Clients (id_person) values (12);
-/*3 ordernes, inserto solo los datos necesarios para las consultas */
+/*3 ordernes, inserto solo los datos necesarios para las consultas, 
+el total en las ordenes sería el oficial pero en estos datos dummys 
+no va a cuadrar*/
 insert into Orders (id_client, deadline, total) values (5, '2023-01-01 02:05:28', 4000);
 insert into Orders (id_client, deadline, total) values (10, '2022-11-16 09:16:45', 8150);
 insert into Orders (id_client, deadline, total) values (1, '2022-04-02 05:24:49', 15900);
@@ -347,4 +349,27 @@ insert into OrdersDetails (id_order, id_inventary, quantity, sell_price) values 
 insert into OrdersDetails (id_order, id_inventary, quantity, sell_price) values (2, 5, 5, 64);
 insert into OrdersDetails (id_order, id_inventary, quantity, sell_price) values (3, 21, 3, 71);
 insert into OrdersDetails (id_order, id_inventary, quantity, sell_price) values (3, 1, 2, 61);
+
+/*Conultas de la primera entrega*/
+
+/*cuál es el top 5 de compradores estrella*/
+SELECT TOP 5 
+  Orders.id_client AS cliente_estrella, SUM(Orders.total) AS total_compras
+  FROM Orders
+  GROUP BY Orders.id_client
+  ORDER BY total_compras DESC
+
+/*cuál es el top 5 de productos más vendidos en los últimos 15 días*/ 
+SELECT TOP 5 
+  InventaryLogs.id_product as Producto_más_vendido, SUM(OrdersDetails.quantity * OrdersDetails.sell_price) AS total_vendido
+  FROM Orders
+  INNER JOIN OrdersDetails
+  ON OrdersDetails.id_order = Orders.id_order
+  INNER JOIN InventaryLogs
+  ON InventaryLogs.id_inventary_logs = OrdersDetails.id_inventary
+  WHERE DATEDIFF(DAY, Orders.post_time, GETDATE()) < 16
+  GROUP BY InventaryLogs.id_product
+  ORDER BY total_vendido DESC
+/*cuál es el total de compras por persona*/
+/*cuál es el total vendido por producto*/
 
