@@ -218,3 +218,133 @@ CREATE TABLE ProductsPreparations(
   preparation_status INT FOREIGN KEY REFERENCES PreparationsStatus(id_status),
   preparation_type INT FOREIGN KEY REFERENCES PreparationsTypes(id_type),
 );
+
+GO
+/*
+Dummy data
+*/
+
+/*20 personas*/
+insert into Persons (person_name, last_name, email, phone) values ('Leda', 'Paddemore', 'lpaddemore0@cam.ac.uk', '373086848');
+insert into Persons (person_name, last_name, email, phone) values ('Dacey', 'Izacenko', 'dizacenko1@noaa.gov', '679121906');
+insert into Persons (person_name, last_name, email, phone) values ('Armando', 'Pavie', 'apavie2@nba.com', '932940242');
+insert into Persons (person_name, last_name, email, phone) values ('Gabbey', 'Theis', 'gtheis3@techcrunch.com', '655928297');
+insert into Persons (person_name, last_name, email, phone) values ('Hasty', 'Fernie', 'hfernie4@walmart.com', '886962581');
+insert into Persons (person_name, last_name, email, phone) values ('Nady', 'Maryet', 'nmaryet5@upenn.edu', '294668332');
+insert into Persons (person_name, last_name, email, phone) values ('Cchaddie', 'Mallindine', 'cmallindine6@sogou.com', '595896946');
+insert into Persons (person_name, last_name, email, phone) values ('Gerianna', 'Quadrio', 'gquadrio7@yahoo.com', '322531750');
+insert into Persons (person_name, last_name, email, phone) values ('Erny', 'Ransley', 'eransley8@topsy.com', '719726165');
+insert into Persons (person_name, last_name, email, phone) values ('Larry', 'MacKnight', 'lmacknight9@telegraph.co.uk', '516307622');
+insert into Persons (person_name, last_name, email, phone) values ('Grantham', 'Oneal', 'goneala@ed.gov', '793215763');
+insert into Persons (person_name, last_name, email, phone) values ('Valentijn', 'Varren', 'vvarrenb@skype.com', '863618582');
+insert into Persons (person_name, last_name, email, phone) values ('Daile', 'Heaton', 'dheatonc@upenn.edu', '335959238');
+insert into Persons (person_name, last_name, email, phone) values ('Abraham', 'Alliband', 'aallibandd@cisco.com', '542246764');
+insert into Persons (person_name, last_name, email, phone) values ('Gael', 'Jude', 'gjudee@last.fm', '694856533');
+insert into Persons (person_name, last_name, email, phone) values ('Lilith', 'Bryce', 'lbrycef@unesco.org', '729571768');
+insert into Persons (person_name, last_name, email, phone) values ('Leonore', 'Menlow', 'lmenlowg@google.de', '954768325');
+insert into Persons (person_name, last_name, email, phone) values ('Leon', 'Castanone', 'lcastanoneh@addtoany.com', '452723736');
+insert into Persons (person_name, last_name, email, phone) values ('Stavros', 'Huchot', 'shuchoti@g.co', '836646704');
+insert into Persons (person_name, last_name, email, phone) values ('Rabi', 'Bolle', 'rbollej@newsvine.com', '747269434');
+
+/* Unidades */
+insert into Units (unit_name) values ('kilos');
+insert into Units (unit_name) values ('unidades');
+
+/*15 productos*/
+insert into Products (product_name, id_unit, min, max) values ('Mauna Kea Phyllostegia', 2, 18, 79);
+insert into Products (product_name, id_unit, min, max) values ('Dirina Lichen', 1, 16, 88);
+insert into Products (product_name, id_unit, min, max) values ('Carolina Wild Petunia', 2, 3, 62);
+insert into Products (product_name, id_unit, min, max) values ('Clokey''s Milkvetch', 2, 7, 71);
+insert into Products (product_name, id_unit, min, max) values ('Yellow Chiodecton Lichen', 2, 24, 73);
+insert into Products (product_name, id_unit, min, max) values ('Rothrock''s Keckiella', 2, 2, 69);
+insert into Products (product_name, id_unit, min, max) values ('Treelover', 2, 21, 82);
+insert into Products (product_name, id_unit, min, max) values ('Noel''s Owl''s-clover', 2, 10, 72);
+insert into Products (product_name, id_unit, min, max) values ('American Dwarf Mistletoe', 2, 10, 71);
+insert into Products (product_name, id_unit, min, max) values ('Erect Brachymenium Moss', 2, 13, 87);
+insert into Products (product_name, id_unit, min, max) values ('Fernald''s Northern Rockcress', 1, 14, 96);
+insert into Products (product_name, id_unit, min, max) values ('Indian Pink', 2, 16, 92);
+insert into Products (product_name, id_unit, min, max) values ('Balsamillo', 2, 8, 70);
+insert into Products (product_name, id_unit, min, max) values ('Freckled Milkvetch', 2, 19, 84);
+insert into Products (product_name, id_unit, min, max) values ('Alpine Bittercress', 2, 25, 97);
+
+
+/* dummy para crear ordernes */
+insert into InventaryLogs (id_product, quantity, buy_price, sell_price) values (10, 60, 14, 91);
+insert into InventaryLogs (id_product, quantity, buy_price, sell_price) values (15, 43, 29, 99);
+insert into InventaryLogs (id_product, quantity, buy_price, sell_price) values (15, 51, 8, 100);
+insert into InventaryLogs (id_product, quantity, buy_price, sell_price) values (15, 64, 25, 75);
+insert into InventaryLogs (id_product, quantity, buy_price, sell_price) values (9, 51, 22, 97);
+insert into InventaryLogs (id_product, quantity, buy_price, sell_price) values (7, 34, 31, 70);
+insert into InventaryLogs (id_product, quantity, buy_price, sell_price) values (8, 68, 13, 83);
+insert into InventaryLogs (id_product, quantity, buy_price, sell_price) values (8, 30, 18, 62);
+insert into InventaryLogs (id_product, quantity, buy_price, sell_price) values (6, 46, 35, 71);
+insert into InventaryLogs (id_product, quantity, buy_price, sell_price) values (10, 40, 5, 78);
+insert into InventaryLogs (id_product, quantity, buy_price, sell_price) values (9, 22, 1, 91);
+insert into InventaryLogs (id_product, quantity, buy_price, sell_price) values (6, 38, 40, 75);
+insert into InventaryLogs (id_product, quantity, buy_price, sell_price) values (3, 63, 36, 90);
+insert into InventaryLogs (id_product, quantity, buy_price, sell_price) values (13, 23, 38, 77);
+insert into InventaryLogs (id_product, quantity, buy_price, sell_price) values (14, 60, 20, 92);
+insert into InventaryLogs (id_product, quantity, buy_price, sell_price) values (4, 67, 15, 95);
+insert into InventaryLogs (id_product, quantity, buy_price, sell_price) values (2, 53, 25, 90);
+insert into InventaryLogs (id_product, quantity, buy_price, sell_price) values (1, 26, 25, 84);
+insert into InventaryLogs (id_product, quantity, buy_price, sell_price) values (6, 52, 25, 99);
+insert into InventaryLogs (id_product, quantity, buy_price, sell_price) values (7, 70, 28, 96);
+insert into InventaryLogs (id_product, quantity, buy_price, sell_price) values (8, 44, 34, 96);
+insert into InventaryLogs (id_product, quantity, buy_price, sell_price) values (4, 20, 33, 73);
+insert into InventaryLogs (id_product, quantity, buy_price, sell_price) values (4, 46, 7, 92);
+insert into InventaryLogs (id_product, quantity, buy_price, sell_price) values (11, 24, 13, 63);
+insert into InventaryLogs (id_product, quantity, buy_price, sell_price) values (8, 70, 6, 60);
+insert into InventaryLogs (id_product, quantity, buy_price, sell_price) values (15, 22, 16, 80);
+insert into InventaryLogs (id_product, quantity, buy_price, sell_price) values (6, 67, 20, 93);
+insert into InventaryLogs (id_product, quantity, buy_price, sell_price) values (9, 26, 39, 81);
+insert into InventaryLogs (id_product, quantity, buy_price, sell_price) values (8, 65, 37, 89);
+insert into InventaryLogs (id_product, quantity, buy_price, sell_price) values (4, 21, 31, 91);
+
+insert into Clients (id_person) values (1);
+insert into Clients (id_person) values (2);
+insert into Clients (id_person) values (3);
+insert into Clients (id_person) values (4);
+insert into Clients (id_person) values (5);
+insert into Clients (id_person) values (6);
+insert into Clients (id_person) values (7);
+insert into Clients (id_person) values (8);
+insert into Clients (id_person) values (9);
+insert into Clients (id_person) values (10);
+insert into Clients (id_person) values (11);
+insert into Clients (id_person) values (12);
+/*3 ordernes, inserto solo los datos necesarios para las consultas */
+insert into Orders (id_client, deadline, total) values (5, '2023-01-01 02:05:28', 4000);
+insert into Orders (id_client, deadline, total) values (10, '2022-11-16 09:16:45', 8150);
+insert into Orders (id_client, deadline, total) values (1, '2022-04-02 05:24:49', 15900);
+
+insert into OrdersDetails (id_order, id_inventary, quantity, sell_price) values (3, 10, 5, 54);
+insert into OrdersDetails (id_order, id_inventary, quantity, sell_price) values (1, 27, 1, 54);
+insert into OrdersDetails (id_order, id_inventary, quantity, sell_price) values (1, 9, 4, 77);
+insert into OrdersDetails (id_order, id_inventary, quantity, sell_price) values (1, 15, 3, 54);
+insert into OrdersDetails (id_order, id_inventary, quantity, sell_price) values (2, 28, 1, 55);
+insert into OrdersDetails (id_order, id_inventary, quantity, sell_price) values (2, 7, 2, 54);
+insert into OrdersDetails (id_order, id_inventary, quantity, sell_price) values (3, 23, 1, 79);
+insert into OrdersDetails (id_order, id_inventary, quantity, sell_price) values (2, 5, 4, 58);
+insert into OrdersDetails (id_order, id_inventary, quantity, sell_price) values (1, 17, 1, 60);
+insert into OrdersDetails (id_order, id_inventary, quantity, sell_price) values (2, 23, 1, 57);
+insert into OrdersDetails (id_order, id_inventary, quantity, sell_price) values (1, 7, 2, 53);
+insert into OrdersDetails (id_order, id_inventary, quantity, sell_price) values (1, 27, 3, 74);
+insert into OrdersDetails (id_order, id_inventary, quantity, sell_price) values (2, 24, 5, 57);
+insert into OrdersDetails (id_order, id_inventary, quantity, sell_price) values (3, 9, 3, 70);
+insert into OrdersDetails (id_order, id_inventary, quantity, sell_price) values (1, 13, 4, 54);
+insert into OrdersDetails (id_order, id_inventary, quantity, sell_price) values (2, 23, 2, 77);
+insert into OrdersDetails (id_order, id_inventary, quantity, sell_price) values (2, 30, 4, 73);
+insert into OrdersDetails (id_order, id_inventary, quantity, sell_price) values (1, 9, 3, 72);
+insert into OrdersDetails (id_order, id_inventary, quantity, sell_price) values (2, 4, 3, 75);
+insert into OrdersDetails (id_order, id_inventary, quantity, sell_price) values (1, 9, 4, 75);
+insert into OrdersDetails (id_order, id_inventary, quantity, sell_price) values (1, 30, 5, 77);
+insert into OrdersDetails (id_order, id_inventary, quantity, sell_price) values (2, 30, 4, 74);
+insert into OrdersDetails (id_order, id_inventary, quantity, sell_price) values (2, 4, 4, 55);
+insert into OrdersDetails (id_order, id_inventary, quantity, sell_price) values (3, 30, 4, 75);
+insert into OrdersDetails (id_order, id_inventary, quantity, sell_price) values (2, 8, 4, 65);
+insert into OrdersDetails (id_order, id_inventary, quantity, sell_price) values (3, 19, 4, 72);
+insert into OrdersDetails (id_order, id_inventary, quantity, sell_price) values (1, 27, 4, 76);
+insert into OrdersDetails (id_order, id_inventary, quantity, sell_price) values (2, 5, 5, 64);
+insert into OrdersDetails (id_order, id_inventary, quantity, sell_price) values (3, 21, 3, 71);
+insert into OrdersDetails (id_order, id_inventary, quantity, sell_price) values (3, 1, 2, 61);
+
