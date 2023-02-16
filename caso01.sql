@@ -1,3 +1,8 @@
+/*
+Caso 01 - Preliminar #1
+Esteban Guzmán Ramírez - 2015095861
+*/
+
 CREATE DATABASE caso01
 
 GO 
@@ -371,5 +376,15 @@ SELECT TOP 5
   GROUP BY InventaryLogs.id_product
   ORDER BY total_vendido DESC
 /*cuál es el total de compras por persona*/
-/*cuál es el total vendido por producto*/
+SELECT 
+  Orders.id_client AS cliente, SUM(Orders.total) AS total_compras
+  FROM Orders
+  GROUP BY Orders.id_client
 
+/*cuál es el total vendido por producto*/
+SELECT 
+	InventaryLogs.id_product as Producto, SUM(OrdersDetails.quantity * OrdersDetails.sell_price) AS total_vendido
+  FROM OrdersDetails
+  INNER JOIN InventaryLogs
+  ON InventaryLogs.id_inventary_logs = OrdersDetails.id_inventary
+  GROUP BY InventaryLogs.id_product
