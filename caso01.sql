@@ -103,6 +103,12 @@ CREATE TABLE Producers(
   producer_name NVARCHAR(255) NOT NULL,
 );
 
+CREATE TABLE Producers_Addresses(
+  id_pxa INT IDENTITY(1, 1) PRIMARY KEY,
+  id_producer INT FOREIGN KEY REFERENCES Producers(id_producer),
+  id_address INT FOREIGN KEY REFERENCES Addresses(id_address)
+);
+
 CREATE TABLE ProducerContacs(
   id_producer_contact INT IDENTITY(1, 1) PRIMARY KEY,
   id_producer INT FOREIGN KEY REFERENCES Producers(id_producer),
