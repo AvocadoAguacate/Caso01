@@ -66,6 +66,30 @@ CREATE TABLE Units(
   unit_name NVARCHAR(255) NOT NULL
 );
 
+CREATE TABLE Countries(
+  id_country INT IDENTITY(1, 1) PRIMARY KEY,
+  country_name NVARCHAR(255) NOT NULL
+);
+
+CREATE TABLE States(
+  id_state INT IDENTITY(1, 1) PRIMARY KEY,
+  state_name NVARCHAR(255) NOT NULL,
+  id_country INT FOREIGN KEY REFERENCES Countries(id_country)
+);
+
+CREATE TABLE Districts(
+  id_district INT IDENTITY(1, 1) PRIMARY KEY,
+  district_name NVARCHAR(255) NOT NULL,
+  id_state INT FOREIGN KEY REFERENCES States(id_state)
+);
+
+CREATE TABLE Addresses(
+  id_address INT IDENTITY(1, 1) PRIMARY KEY,
+  id_district INT FOREIGN KEY REFERENCES Districts(id_district),
+  address_1 NVARCHAR(255) NOT NULL,
+  address_2 NVARCHAR(255),
+);
+
 CREATE TABLE Persons(
   id_person INT IDENTITY(1, 1) PRIMARY KEY,
   person_name NVARCHAR(255) NOT NULL,
@@ -147,8 +171,7 @@ CREATE TABLE Cards(
 CREATE TABLE ReceptionPlaces(
   id_place INT IDENTITY(1, 1) PRIMARY KEY,
   id_client INT FOREIGN KEY REFERENCES Clients(id_client),
-  place GEOGRAPHY
-  /*quiero cambiar de patrón y sustutir*/
+  place INT FOREIGN KEY REFERENCES Addresses(id_address)
 );
 
 CREATE TABLE Orders(
