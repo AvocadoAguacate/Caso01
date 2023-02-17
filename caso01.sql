@@ -58,29 +58,39 @@ CREATE TABLE ProductStatus(
 
 CREATE TABLE PaymenMethods(
   id_payment_method INT IDENTITY(1,1) PRIMARY KEY,
-  payment_name NVARCHAR(255) NOT NULL
+  payment_name NVARCHAR(255) NOT NULL,
+  [enabled] BIT NOT NULL DEFAULT 1,
+  deleted BIT NOT NULL DEFAULT 0
 );
 
 CREATE TABLE Units(
   id_unit INT IDENTITY(1,1) PRIMARY KEY,
-  unit_name NVARCHAR(255) NOT NULL
+  unit_name NVARCHAR(255) NOT NULL,
+  [enabled] BIT NOT NULL DEFAULT 1,
+  deleted BIT NOT NULL DEFAULT 0
 );
 
 CREATE TABLE Countries(
   id_country INT IDENTITY(1, 1) PRIMARY KEY,
-  country_name NVARCHAR(255) NOT NULL
+  country_name NVARCHAR(255) NOT NULL,
+  [enabled] BIT NOT NULL DEFAULT 1,
+  deleted BIT NOT NULL DEFAULT 0
 );
 
 CREATE TABLE States(
   id_state INT IDENTITY(1, 1) PRIMARY KEY,
   state_name NVARCHAR(255) NOT NULL,
-  id_country INT FOREIGN KEY REFERENCES Countries(id_country)
+  id_country INT FOREIGN KEY REFERENCES Countries(id_country),
+  [enabled] BIT NOT NULL DEFAULT 1,
+  deleted BIT NOT NULL DEFAULT 0
 );
 
 CREATE TABLE Districts(
   id_district INT IDENTITY(1, 1) PRIMARY KEY,
   district_name NVARCHAR(255) NOT NULL,
-  id_state INT FOREIGN KEY REFERENCES States(id_state)
+  id_state INT FOREIGN KEY REFERENCES States(id_state),
+  [enabled] BIT NOT NULL DEFAULT 1,
+  deleted BIT NOT NULL DEFAULT 0
 );
 
 CREATE TABLE Addresses(
@@ -88,6 +98,8 @@ CREATE TABLE Addresses(
   id_district INT FOREIGN KEY REFERENCES Districts(id_district),
   address_1 NVARCHAR(255) NOT NULL,
   address_2 NVARCHAR(255),
+  [enabled] BIT NOT NULL DEFAULT 1,
+  deleted BIT NOT NULL DEFAULT 0
 );
 
 CREATE TABLE Persons(
@@ -101,18 +113,25 @@ CREATE TABLE Persons(
 CREATE TABLE Producers(
   id_producer INT IDENTITY(1, 1) PRIMARY KEY,
   producer_name NVARCHAR(255) NOT NULL,
+  [enabled] BIT NOT NULL DEFAULT 1,
+  deleted BIT NOT NULL DEFAULT 0
 );
 
 CREATE TABLE Producers_Addresses(
   id_pxa INT IDENTITY(1, 1) PRIMARY KEY,
   id_producer INT FOREIGN KEY REFERENCES Producers(id_producer),
-  id_address INT FOREIGN KEY REFERENCES Addresses(id_address)
+  id_address INT FOREIGN KEY REFERENCES Addresses(id_address),
+  [enabled] BIT NOT NULL DEFAULT 1,
+  deleted BIT NOT NULL DEFAULT 0
 );
 
 CREATE TABLE Contacts(
   id_contact INT IDENTITY(1, 1) PRIMARY KEY,
   id_contact_type INT FOREIGN KEY REFERENCES ContactTypes(id_type),
   contact NVARCHAR(255) NOT NULL,
+  [enabled] BIT NOT NULL DEFAULT 1,
+  deleted BIT NOT NULL DEFAULT 0
+
 );
 
 CREATE TABLE Producers_Contacs(
@@ -127,7 +146,9 @@ CREATE TABLE Products(
   product_name NVARCHAR(255) NOT NULL,
   id_unit INT FOREIGN KEY REFERENCES Units(id_unit),
   min INT NOT NULL,
-  max INT NOT NULL
+  max INT NOT NULL,
+  [enabled] BIT NOT NULL DEFAULT 1,
+  deleted BIT NOT NULL DEFAULT 0
 );
 
 CREATE TABLE StorageSpaces(
@@ -140,7 +161,9 @@ CREATE TABLE StorageSpaces(
   deep INT NOT NULL,
   id_storage_type INT FOREIGN KEY REFERENCES StorageTypes(id_Storage_type),
   level_parent INT FOREIGN KEY REFERENCES StorageSpaces(id_storage_space),
-  level_number INT NOT NULL
+  level_number INT NOT NULL,
+  [enabled] BIT NOT NULL DEFAULT 1,
+  deleted BIT NOT NULL DEFAULT 0
 );
 
 CREATE TABLE InventaryLogs(
@@ -152,7 +175,9 @@ CREATE TABLE InventaryLogs(
   sell_price INT NOT NULL,
   id_status INT FOREIGN KEY REFERENCES ProductStatus(id_status),
   id_producer INT FOREIGN KEY REFERENCES Producers(id_producer),
-  id_storage_space INT FOREIGN KEY REFERENCES StorageSpaces(id_storage_space)
+  id_storage_space INT FOREIGN KEY REFERENCES StorageSpaces(id_storage_space),
+  [enabled] BIT NOT NULL DEFAULT 1,
+  deleted BIT NOT NULL DEFAULT 0
 );
 
 CREATE TABLE Collaborators(
@@ -161,25 +186,33 @@ CREATE TABLE Collaborators(
   id_person INT FOREIGN KEY REFERENCES Persons(id_person),
   id_type INT FOREIGN KEY REFERENCES CollaboratorsTypes(id_type),
   salary INT NOT NULL,
-  post_time DATETIME NOT NULL DEFAULT GETDATE()
+  post_time DATETIME NOT NULL DEFAULT GETDATE(),
+  [enabled] BIT NOT NULL DEFAULT 1,
+  deleted BIT NOT NULL DEFAULT 0
 );
 
 CREATE TABLE Clients(
   id_client INT IDENTITY(1, 1) PRIMARY KEY,
   id_person INT FOREIGN KEY REFERENCES Persons(id_person),
-  post_time DATETIME NOT NULL DEFAULT GETDATE()
+  post_time DATETIME NOT NULL DEFAULT GETDATE(),
+  [enabled] BIT NOT NULL DEFAULT 1,
+  deleted BIT NOT NULL DEFAULT 0
 );
 
 CREATE TABLE Clients_Contacts(
   id_cxc INT IDENTITY(1, 1) PRIMARY KEY,
   id_client INT FOREIGN KEY REFERENCES Clients(id_client),
-  id_contact INT FOREIGN KEY REFERENCES Contacts(id_contact)
+  id_contact INT FOREIGN KEY REFERENCES Contacts(id_contact),
+  [enabled] BIT NOT NULL DEFAULT 1,
+  deleted BIT NOT NULL DEFAULT 0
 );
 
 CREATE TABLE Collaborators_Contacts(
   id_cxc INT IDENTITY(1, 1) PRIMARY KEY,
   id_collaborator INT FOREIGN KEY REFERENCES Collaborators(id_collaborator),
-  id_contact INT FOREIGN KEY REFERENCES Contacts(id_contact)
+  id_contact INT FOREIGN KEY REFERENCES Contacts(id_contact),
+  [enabled] BIT NOT NULL DEFAULT 1,
+  deleted BIT NOT NULL DEFAULT 0
 );
 
 CREATE TABLE Cards(
@@ -188,13 +221,17 @@ CREATE TABLE Cards(
   post_time DATETIME NOT NULL DEFAULT GETDATE(),
   card_number BIGINT NOT NULL UNIQUE,
   expiration_date DATETIME NOT NULL,
-  cvv SMALLINT NOT NULL
+  cvv SMALLINT NOT NULL,
+  [enabled] BIT NOT NULL DEFAULT 1,
+  deleted BIT NOT NULL DEFAULT 0
 );
 
 CREATE TABLE ReceptionPlaces(
   id_place INT IDENTITY(1, 1) PRIMARY KEY,
   id_client INT FOREIGN KEY REFERENCES Clients(id_client),
-  place INT FOREIGN KEY REFERENCES Addresses(id_address)
+  place INT FOREIGN KEY REFERENCES Addresses(id_address),
+  [enabled] BIT NOT NULL DEFAULT 1,
+  deleted BIT NOT NULL DEFAULT 0
 );
 
 CREATE TABLE Orders(
@@ -240,9 +277,10 @@ CREATE TABLE Routes(
   init_time DATETIME NOT NULL,
   finish_time DATETIME,
   id_collaborator INT FOREIGN KEY REFERENCES Collaborators(id_collaborator)
+  /*quiero un status para cancerlar, agendar, viajando o confirmar viaje completo*/
 );
 
-CREATE TABLE Order_Routes(
+CREATE TABLE Orders_Routes(
   id_oxr INT IDENTITY(1, 1) PRIMARY KEY,
   id_order INT FOREIGN KEY REFERENCES Orders(id_order),
   id_route INT FOREIGN KEY REFERENCES Routes(id_route),
