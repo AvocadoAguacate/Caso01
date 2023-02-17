@@ -94,8 +94,8 @@ CREATE TABLE Persons(
   id_person INT IDENTITY(1, 1) PRIMARY KEY,
   person_name NVARCHAR(255) NOT NULL,
   last_name NVARCHAR(255) NOT NULL,
-  email NVARCHAR(255) NOT NULL,
-  phone INT NOT NULL
+  username NVARCHAR(100) NOT NULL UNIQUE,
+  person_password NVARCHAR(100) NOT NULL
 );
 
 CREATE TABLE Producers(
@@ -109,12 +109,17 @@ CREATE TABLE Producers_Addresses(
   id_address INT FOREIGN KEY REFERENCES Addresses(id_address)
 );
 
-CREATE TABLE ProducerContacs(
-  id_producer_contact INT IDENTITY(1, 1) PRIMARY KEY,
-  id_producer INT FOREIGN KEY REFERENCES Producers(id_producer),
+CREATE TABLE Contacts(
+  id_contact INT IDENTITY(1, 1) PRIMARY KEY,
   id_contact_type INT FOREIGN KEY REFERENCES ContactTypes(id_type),
   contact NVARCHAR(255) NOT NULL,
-  contact_procedure NVARCHAR(255)
+);
+
+CREATE TABLE Producers_Contacs(
+  id_pxc INT IDENTITY(1, 1) PRIMARY KEY,
+  id_producer INT FOREIGN KEY REFERENCES Producers(id_producer),
+  contact_procedure NVARCHAR(255),
+  id_contact INT FOREIGN KEY REFERENCES Contacts(id_contact)
 );
 
 CREATE TABLE Products(
@@ -163,6 +168,18 @@ CREATE TABLE Clients(
   id_client INT IDENTITY(1, 1) PRIMARY KEY,
   id_person INT FOREIGN KEY REFERENCES Persons(id_person),
   post_time DATETIME NOT NULL DEFAULT GETDATE()
+);
+
+CREATE TABLE Clients_Contacts(
+  id_cxc INT IDENTITY(1, 1) PRIMARY KEY,
+  id_client INT FOREIGN KEY REFERENCES Clients(id_client),
+  id_contact INT FOREIGN KEY REFERENCES Contacts(id_contact)
+);
+
+CREATE TABLE Collaborators_Contacts(
+  id_cxc INT IDENTITY(1, 1) PRIMARY KEY,
+  id_collaborator INT FOREIGN KEY REFERENCES Collaborators(id_collaborator),
+  id_contact INT FOREIGN KEY REFERENCES Contacts(id_contact)
 );
 
 CREATE TABLE Cards(
