@@ -56,6 +56,11 @@ CREATE TABLE ProductStatus(
   status_name NVARCHAR(255) NOT NULL
 );
 
+CREATE TABLE RoutesStatus(
+  id_status INT IDENTITY(1,1) PRIMARY KEY,
+  status_name NVARCHAR(255) NOT NULL
+);
+
 CREATE TABLE PaymenMethods(
   id_payment_method INT IDENTITY(1,1) PRIMARY KEY,
   payment_name NVARCHAR(255) NOT NULL,
@@ -271,13 +276,12 @@ CREATE TABLE Reviews(
   id_comment_type INT FOREIGN KEY REFERENCES CommentTypes(id_type)
 );
 
-
 CREATE TABLE Routes(
   id_route INT IDENTITY(1, 1) PRIMARY KEY,
   init_time DATETIME NOT NULL,
   finish_time DATETIME,
-  id_collaborator INT FOREIGN KEY REFERENCES Collaborators(id_collaborator)
-  /*quiero un status para cancerlar, agendar, viajando o confirmar viaje completo*/
+  id_collaborator INT FOREIGN KEY REFERENCES Collaborators(id_collaborator),
+  id_status INT FOREIGN KEY REFERENCES RoutesStatus(id_status)
 );
 
 CREATE TABLE Orders_Routes(
