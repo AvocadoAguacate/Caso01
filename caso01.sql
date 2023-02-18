@@ -162,6 +162,7 @@ CREATE TABLE Products(
   id_unit INT FOREIGN KEY REFERENCES Units(id_unit),
   min INT NOT NULL,
   max INT NOT NULL,
+  photo_url VARCHAR(255) NOT NULL,
   [enabled] BIT NOT NULL DEFAULT 1,
   deleted BIT NOT NULL DEFAULT 0,
   checksum VARBINARY(250) NOT NULL
@@ -315,6 +316,7 @@ CREATE TABLE Orders_Routes(
   id_order INT FOREIGN KEY REFERENCES Orders(id_order),
   id_route INT FOREIGN KEY REFERENCES Routes(id_route),
   delivery_time DATETIME,
+  photo_url VARCHAR(255) NOT NULL,
   delivery_status INT FOREIGN KEY REFERENCES DeliveryStatus (id_status),
 );
 
