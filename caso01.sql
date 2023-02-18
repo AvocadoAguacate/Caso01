@@ -153,7 +153,8 @@ CREATE TABLE Products(
   min INT NOT NULL,
   max INT NOT NULL,
   [enabled] BIT NOT NULL DEFAULT 1,
-  deleted BIT NOT NULL DEFAULT 0
+  deleted BIT NOT NULL DEFAULT 0,
+  checksum VARBINARY(250) NOT NULL
 );
 
 CREATE TABLE StorageSpaces(
@@ -249,7 +250,8 @@ CREATE TABLE Orders(
   id_status INT FOREIGN KEY REFERENCES OrderStatus(id_status),
   total INT NOT NULL,
   id_reception_place INT FOREIGN KEY REFERENCES ReceptionPlaces(id_place),
-  payment_method INT FOREIGN KEY REFERENCES PaymenMethods(id_payment_method)
+  payment_method INT FOREIGN KEY REFERENCES PaymenMethods(id_payment_method),
+  checksum VARBINARY(250) NOT NULL
 );
 
 CREATE TABLE OrdersDetails(
@@ -257,7 +259,8 @@ CREATE TABLE OrdersDetails(
   id_order INT FOREIGN KEY REFERENCES Orders(id_order),
   id_inventary INT FOREIGN KEY REFERENCES InventaryLogs(id_inventary_logs),
   quantity INT NOT NULL,
-  sell_price INT NOT NULL
+  sell_price INT NOT NULL,
+  checksum VARBINARY(250) NOT NULL
 );
 
 CREATE TABLE Orders_Cards(
@@ -274,6 +277,11 @@ CREATE TABLE Reviews(
   qualification TINYINT CHECK(qualification < 101 AND qualification > -1),
   comment NVARCHAR(500),
   id_comment_type INT FOREIGN KEY REFERENCES CommentTypes(id_type)
+);
+
+CREATE TABLE Trucks(
+  id_truck INT IDENTITY(1, 1) PRIMARY KEY,
+  
 );
 
 CREATE TABLE Routes(
@@ -476,3 +484,6 @@ SELECT
   INNER JOIN InventaryLogs
   ON InventaryLogs.id_inventary_logs = OrdersDetails.id_inventary
   GROUP BY InventaryLogs.id_product
+
+/*insert con checksum*/
+insert into persona (nombre, checksum) values ('adolfo', HASHBYTES('SHA2_512', CONCAT('adolfo','pura vida maes', @numero)))
