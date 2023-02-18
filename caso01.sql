@@ -113,6 +113,7 @@ CREATE TABLE Addresses(
   id_district INT FOREIGN KEY REFERENCES Districts(id_district),
   address_1 NVARCHAR(255) NOT NULL,
   address_2 NVARCHAR(255),
+  delivery_geo GEOGRAPHY,
   [enabled] BIT NOT NULL DEFAULT 1,
   deleted BIT NOT NULL DEFAULT 0
 );
@@ -316,7 +317,8 @@ CREATE TABLE Orders_Routes(
   id_order INT FOREIGN KEY REFERENCES Orders(id_order),
   id_route INT FOREIGN KEY REFERENCES Routes(id_route),
   delivery_time DATETIME,
-  photo_url VARCHAR(255) NOT NULL,
+  photo_url VARCHAR(255),
+  delivery_geo GEOGRAPHY,
   delivery_status INT FOREIGN KEY REFERENCES DeliveryStatus (id_status),
 );
 
