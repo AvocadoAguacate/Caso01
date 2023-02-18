@@ -21,6 +21,11 @@ CREATE TABLE CollaboratorsTypes(
   type_name NVARCHAR(255) NOT NULL
 );
 
+CREATE TABLE TrucksTypes(
+  id_type INT IDENTITY(1,1) PRIMARY KEY,
+  type_name NVARCHAR(255) NOT NULL
+);
+
 CREATE TABLE PreparationsTypes(
   id_type INT IDENTITY(1,1) PRIMARY KEY,
   type_name NVARCHAR(255) NOT NULL
@@ -51,7 +56,12 @@ CREATE TABLE PreparationsStatus(
   status_name NVARCHAR(255) NOT NULL
 );
 
-CREATE TABLE ProductStatus(
+CREATE TABLE ProductsStatus(
+  id_status INT IDENTITY(1,1) PRIMARY KEY,
+  status_name NVARCHAR(255) NOT NULL
+);
+
+CREATE TABLE TrucksStatus(
   id_status INT IDENTITY(1,1) PRIMARY KEY,
   status_name NVARCHAR(255) NOT NULL
 );
@@ -179,7 +189,7 @@ CREATE TABLE InventaryLogs(
   quantity INT NOT NULL,
   buy_price INT NOT NULL,
   sell_price INT NOT NULL,
-  id_status INT FOREIGN KEY REFERENCES ProductStatus(id_status),
+  id_status INT FOREIGN KEY REFERENCES ProductsStatus(id_status),
   id_producer INT FOREIGN KEY REFERENCES Producers(id_producer),
   id_storage_space INT FOREIGN KEY REFERENCES StorageSpaces(id_storage_space),
   [enabled] BIT NOT NULL DEFAULT 1,
@@ -281,7 +291,14 @@ CREATE TABLE Reviews(
 
 CREATE TABLE Trucks(
   id_truck INT IDENTITY(1, 1) PRIMARY KEY,
-  
+  id_type INT FOREIGN KEY REFERENCES TrucksTypes(id_type),
+  license_plate NVARCHAR(20) NOT NULL UNIQUE,
+  garage INT FOREIGN KEY REFERENCES StorageSpaces(id_storage_space),
+  id_status INT FOREIGN KEY REFERENCES TrucksStatus(id_status),
+  max_weight INT NOT NULL,
+  weight INT NOT NULL,
+  height INT NOT NULL,
+  deep INT NOT NULL,
 );
 
 CREATE TABLE Routes(
@@ -289,7 +306,8 @@ CREATE TABLE Routes(
   init_time DATETIME NOT NULL,
   finish_time DATETIME,
   id_collaborator INT FOREIGN KEY REFERENCES Collaborators(id_collaborator),
-  id_status INT FOREIGN KEY REFERENCES RoutesStatus(id_status)
+  id_status INT FOREIGN KEY REFERENCES RoutesStatus(id_status),
+  id_truck INT FOREIGN KEY REFERENCES Trucks(id_truck)
 );
 
 CREATE TABLE Orders_Routes(
