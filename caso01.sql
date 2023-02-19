@@ -166,6 +166,7 @@ CREATE TABLE Products(
   id_product INT IDENTITY(1, 1) PRIMARY KEY,
   product_name NVARCHAR(255) NOT NULL,
   id_unit INT FOREIGN KEY REFERENCES Units(id_unit),
+  estimated_weight FLOAT NOT NULL DEFAULT 1,
   min_quantity INT NOT NULL,
   max_quantity INT NOT NULL,
   photo_url VARCHAR(255) NOT NULL,
@@ -217,7 +218,6 @@ CREATE TABLE Collaborators(
   id_boss INT FOREIGN KEY REFERENCES Collaborators(id_collaborator),
   id_person INT FOREIGN KEY REFERENCES Persons(id_person),
   id_type INT FOREIGN KEY REFERENCES CollaboratorsTypes(id_type),
-  salary INT NOT NULL,
   post_time DATETIME NOT NULL DEFAULT GETDATE(),
   [enabled] BIT NOT NULL DEFAULT 1,
   deleted BIT NOT NULL DEFAULT 0
@@ -274,6 +274,7 @@ CREATE TABLE Orders(
   dispatch_place INT FOREIGN KEY REFERENCES StorageSpaces(id_storage_space),
   deadline DATETIME NOT NULL,
   id_status INT FOREIGN KEY REFERENCES OrderStatus(id_status),
+  [weight] FLOAT NOT NULL,
   total MONEY NOT NULL,
   id_reception_place INT FOREIGN KEY REFERENCES ReceptionPlaces(id_place),
   payment_method INT FOREIGN KEY REFERENCES PaymenMethods(id_payment_method),
@@ -283,7 +284,7 @@ CREATE TABLE Orders(
 CREATE TABLE OrdersDetails(
   id_order_detail INT IDENTITY(1, 1) PRIMARY KEY,
   id_order INT FOREIGN KEY REFERENCES Orders(id_order),
-  id_inventary INT FOREIGN KEY REFERENCES InventaryLogs(id_inventary_logs),
+  id_product INT FOREIGN KEY REFERENCES Products(id_product),
   quantity INT NOT NULL,
   sell_price MONEY NOT NULL,
   checksum VARBINARY(250) NOT NULL
