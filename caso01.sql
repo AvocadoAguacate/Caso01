@@ -340,21 +340,32 @@ CREATE TABLE Orders_Routes(
 CREATE TABLE OrdersPreparations(
   id_order_preparation INT IDENTITY(1, 1) PRIMARY KEY,
   id_order INT FOREIGN KEY REFERENCES Orders(id_order),
-  id_collaborator INT FOREIGN KEY REFERENCES Collaborators(id_collaborator),
   init_time DATETIME NOT NULL DEFAULT GETDATE(),
   finish_time DATETIME,
   preparation_status INT FOREIGN KEY REFERENCES OrderStatus(id_status),
+);
+
+CREATE TABLE OrdersPreparations_Collaborators(
+  id_opxc INT IDENTITY(1, 1) PRIMARY KEY,
+  id_order_preparation INT FOREIGN KEY REFERENCES OrdersPreparations(id_order_preparation),
+  id_collaborator INT FOREIGN KEY REFERENCES Collaborators(id_collaborator),
+  preparation_type INT FOREIGN KEY REFERENCES PreparationsTypes(id_type)
 );
 
 CREATE TABLE ProductsPreparations(
   id_product_preparation INT IDENTITY(1, 1) PRIMARY KEY,
   id_inventary INT FOREIGN KEY REFERENCES InventaryLogs(id_inventary_logs),
   quantity INT NOT NULL,
-  id_collaborator INT FOREIGN KEY REFERENCES Collaborators(id_collaborator),
   init_time DATETIME NOT NULL DEFAULT GETDATE(),
   finish_time DATETIME,
-  preparation_status INT FOREIGN KEY REFERENCES PreparationsStatus(id_status),
-  preparation_type INT FOREIGN KEY REFERENCES PreparationsTypes(id_type),
+  preparation_status INT FOREIGN KEY REFERENCES PreparationsStatus(id_status)
+);
+
+CREATE TABLE ProductsPreparations_Collaborators(
+  id_ppxc INT IDENTITY(1, 1) PRIMARY KEY,
+  id_product_preparation INT FOREIGN KEY REFERENCES ProductsPreparations(id_product_preparation),
+  id_collaborator INT FOREIGN KEY REFERENCES Collaborators(id_collaborator),
+  preparation_type INT FOREIGN KEY REFERENCES PreparationsTypes(id_type)
 );
 
 GO
