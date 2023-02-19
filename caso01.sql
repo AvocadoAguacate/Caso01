@@ -66,6 +66,11 @@ CREATE TABLE TrucksStatus(
   status_name NVARCHAR(255) NOT NULL
 );
 
+CREATE TABLE StorageStatus(
+  id_status INT IDENTITY(1,1) PRIMARY KEY,
+  status_name NVARCHAR(255) NOT NULL
+);
+
 CREATE TABLE RoutesStatus(
   id_status INT IDENTITY(1,1) PRIMARY KEY,
   status_name NVARCHAR(255) NOT NULL
@@ -161,9 +166,11 @@ CREATE TABLE Products(
   id_product INT IDENTITY(1, 1) PRIMARY KEY,
   product_name NVARCHAR(255) NOT NULL,
   id_unit INT FOREIGN KEY REFERENCES Units(id_unit),
-  min INT NOT NULL,
-  max INT NOT NULL,
+  min_quantity INT NOT NULL,
+  max_quantity INT NOT NULL,
   photo_url VARCHAR(255) NOT NULL,
+  sell_price MONEY NOT NULL,
+  total_quantity INT NOT NULL,
   [enabled] BIT NOT NULL DEFAULT 1,
   deleted BIT NOT NULL DEFAULT 0,
   checksum VARBINARY(250) NOT NULL
@@ -184,13 +191,20 @@ CREATE TABLE StorageSpaces(
   deleted BIT NOT NULL DEFAULT 0
 );
 
+CREATE TABLE StorageLogs(
+  id_storage_log INT IDENTITY(1, 1) PRIMARY KEY,
+  id_storage_space INT FOREIGN KEY REFERENCES StorageSpaces(id_storage_space),
+  id_storage_status INT FOREIGN KEY REFERENCES StorageStatus(id_status),
+  post_date DATETIME NOT NULL DEFAULT GETDATE(),
+  responsible INT FOREIGN KEY REFERENCES Collaborators(id_collaborator)
+);
+
 CREATE TABLE InventaryLogs(
   id_inventary_logs INT IDENTITY(1, 1) PRIMARY KEY,
   id_product INT FOREIGN KEY REFERENCES Products(id_product),
   post_time DATETIME DEFAULT GETDATE(),
   quantity INT NOT NULL,
-  buy_price INT NOT NULL,
-  sell_price INT NOT NULL,
+  buy_price MONEY NOT NULL,
   id_status INT FOREIGN KEY REFERENCES ProductsStatus(id_status),
   id_producer INT FOREIGN KEY REFERENCES Producers(id_producer),
   id_storage_space INT FOREIGN KEY REFERENCES StorageSpaces(id_storage_space),
@@ -260,7 +274,7 @@ CREATE TABLE Orders(
   dispatch_place INT FOREIGN KEY REFERENCES StorageSpaces(id_storage_space),
   deadline DATETIME NOT NULL,
   id_status INT FOREIGN KEY REFERENCES OrderStatus(id_status),
-  total INT NOT NULL,
+  total MONEY NOT NULL,
   id_reception_place INT FOREIGN KEY REFERENCES ReceptionPlaces(id_place),
   payment_method INT FOREIGN KEY REFERENCES PaymenMethods(id_payment_method),
   checksum VARBINARY(250) NOT NULL
@@ -271,7 +285,7 @@ CREATE TABLE OrdersDetails(
   id_order INT FOREIGN KEY REFERENCES Orders(id_order),
   id_inventary INT FOREIGN KEY REFERENCES InventaryLogs(id_inventary_logs),
   quantity INT NOT NULL,
-  sell_price INT NOT NULL,
+  sell_price MONEY NOT NULL,
   checksum VARBINARY(250) NOT NULL
 );
 
