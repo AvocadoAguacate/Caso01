@@ -56,6 +56,11 @@ CREATE TABLE PreparationsStatus(
   status_name NVARCHAR(255) NOT NULL
 );
 
+CREATE TABLE RefillsStatus(
+  id_status INT IDENTITY(1,1) PRIMARY KEY,
+  status_name NVARCHAR(255) NOT NULL
+);
+
 CREATE TABLE ProductsStatus(
   id_status INT IDENTITY(1,1) PRIMARY KEY,
   status_name NVARCHAR(255) NOT NULL
@@ -152,7 +157,6 @@ CREATE TABLE Contacts(
   contact NVARCHAR(255) NOT NULL,
   [enabled] BIT NOT NULL DEFAULT 1,
   deleted BIT NOT NULL DEFAULT 0
-
 );
 
 CREATE TABLE Producers_Contacs(
@@ -175,6 +179,19 @@ CREATE TABLE Products(
   [enabled] BIT NOT NULL DEFAULT 1,
   deleted BIT NOT NULL DEFAULT 0,
   checksum VARBINARY(250) NOT NULL
+);
+
+CREATE TABLE Refills(
+  id_refill INT IDENTITY(1, 1) PRIMARY KEY,
+  contact INT FOREIGN KEY REFERENCES Producers_Contacs(id_pxc),
+  collection_place INT FOREIGN KEY REFERENCES Producers_Addresses(id_pxa),
+  id_product INT FOREIGN KEY REFERENCES Products(id_product),
+  quantity_estimated INT NOT NULL,
+  buy_price MONEY NOT NULL,
+  id_status INT FOREIGN KEY REFERENCES RefillsStatus(id_status),
+  weight INT NOT NULL,
+  height INT NOT NULL,
+  deep INT NOT NULL
 );
 
 CREATE TABLE StorageSpaces(
@@ -335,6 +352,15 @@ CREATE TABLE Orders_Routes(
   photo_url VARCHAR(255),
   delivery_geo GEOGRAPHY,
   delivery_status INT FOREIGN KEY REFERENCES DeliveryStatus (id_status),
+);
+
+CREATE TABLE Refills_Routes(
+  id_rxr INT IDENTITY(1, 1) PRIMARY KEY,
+  id_refill INT FOREIGN KEY REFERENCES Refills(id_refill),
+  id_route INT FOREIGN KEY REFERENCES Routes(id_route),
+  recieved_time DATETIME,
+  recieved_geo GEOGRAPHY,
+  refill_status INT FOREIGN KEY REFERENCES RefillsStatus(id_status),
 );
 
 CREATE TABLE OrdersPreparations(
