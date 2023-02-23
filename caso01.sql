@@ -724,7 +724,7 @@ VALUES
 (5, '2023-02-25 14:59:32', 4134156118833619, '2024-03-01', 789);
 
 -- Orders
-INSERT INTO Orders(id_client, post_time, discount, dispatch_place, deadline, id_status, weight, total, id_client_address, payment_method, checksum)
+INSERT INTO Orders(id_client, post_time, discount, dispatch_place, deadline, id_status, [weight], total, id_client_address, payment_method, checksum)
 VALUES 
 (1, '2023-02-18 09:00:00', 0, 1, '2023-02-28 23:59:59', 1, 25, 300, 1, 1, 0x0),
 (2, '2023-02-18 11:00:00', 10, 2, '2023-03-01 12:00:00', 1, 15, 200, 2, 2, 0x0),
@@ -838,39 +838,122 @@ INSERT INTO ProductsPreparations (id_inventary, quantity, finish_time, preparati
 INSERT INTO ProductsPreparations_Collaborators (id_product_preparation, id_collaborator, preparation_type) VALUES (1, 2, 1), (1, 4, 2), (2, 5, 1);
 
 
-/*Conultas de la primera entrega*/
+/*Entrega preliminar #2*/
 
--- /*cuál es el top 5 de compradores estrella*/
--- SELECT TOP 5 
---   Orders.id_client AS cliente_estrella, SUM(Orders.total) AS total_compras
---   FROM Orders
---   GROUP BY Orders.id_client
---   ORDER BY total_compras DESC
+-----------------------------------------------------------
+-- Demostrar que las operaciones de ordenar productos y agregar productos a bodega pueden ser transaccionales
+-----------------------------------------------------------
 
--- /*cuál es el top 5 de productos más vendidos en los últimos 15 días*/ 
--- SELECT TOP 5 
---   InventaryLogs.id_product as Producto_más_vendido, SUM(OrdersDetails.quantity * OrdersDetails.sell_price) AS total_vendido
---   FROM Orders
---   INNER JOIN OrdersDetails
---   ON OrdersDetails.id_order = Orders.id_order
---   INNER JOIN InventaryLogs
---   ON InventaryLogs.id_inventary_logs = OrdersDetails.id_inventary
---   WHERE DATEDIFF(DAY, Orders.post_time, GETDATE()) < 16
---   GROUP BY InventaryLogs.id_product
---   ORDER BY total_vendido DESC
--- /*cuál es el total de compras por persona*/
--- SELECT 
---   Orders.id_client AS cliente, SUM(Orders.total) AS total_compras
---   FROM Orders
---   GROUP BY Orders.id_client
 
--- /*cuál es el total vendido por producto*/
--- SELECT 
--- 	InventaryLogs.id_product as Producto, SUM(OrdersDetails.quantity * OrdersDetails.sell_price) AS total_vendido
---   FROM OrdersDetails
---   INNER JOIN InventaryLogs
---   ON InventaryLogs.id_inventary_logs = OrdersDetails.id_inventary
---   GROUP BY InventaryLogs.id_product
+CREATE TYPE dbo.TVP_OrderProducts AS TABLE(
+  product_name NVARCHAR(255),
+  quantity INT
+)
+GO
+-----------------------------------------------------------
+-- Autor: EGuzmán
+-- Fecha: 02/17/2023
+-- Descripcion: procedimiento para registrar un pedido de un consumidor
+-----------------------------------------------------------
+CREATE PROCEDURE [dbo].[FeriaSP_PlaceOrder]
+	@id_client INT,
+  @dispatch_place INT,
+  @deadline DATETIME,
+  -- asumí que el cliente puede tener varias dirreciones, pensando en clientes grandes
+  @client_addresses INT,
+  @payment_method INT,
+  @discount INT = 0,
+	@products TVP_OrderProducts READONLY
+AS 
+BEGIN
+	
+	SET NOCOUNT ON -- no retorne metadatos
+	
+	DECLARE @ErrorNumber INT, @ErrorSeverity INT, @ErrorState INT, @CustomError INT
+	DECLARE @Message VARCHAR(200)
+	DECLARE @InicieTransaccion BIT
 
--- /*insert con checksum*/
--- insert into persona (nombre, checksum) values ('adolfo', HASHBYTES('SHA2_512', CONCAT('adolfo','pura vida maes', @numero)))
+	DECLARE @productCount INT
+	DECLARE @id_status INT 
+	DECLARE @id_order INT
+  DECLARE @checksum VARBINARY(250)
+	DECLARE @total MONEY
+  DECLARE @weight FLOAT
+
+
+	SELECT @id_status = id_status FROM dbo.OrderStatus WHERE status_name = 'Por entregar'
+	SELECT @productCount = COUNT(*) FROM @products
+  SELECT @weight = SUM(Products.estimated_weight * @products.quantity)
+  FROM Products
+  INNER JOIN products ON Products.product_name = products.product_name
+
+	IF (@productCount>0) BEGIN
+
+		SET @InicieTransaccion = 0
+		IF @@TRANCOUNT=0 BEGIN
+			SET @InicieTransaccion = 1
+			SET TRANSACTION ISOLATION LEVEL READ COMMITTED
+			BEGIN TRANSACTION		
+		END
+	
+		BEGIN TRY
+			SET @CustomError = 2001
+
+			INSERT INTO dbo.Orders (id_client, discount, dispatch_place, deadline, id_status, [weight], total, id_client_address, payment_method, checksum)
+			VALUES
+			(@clientId, @discount, @dispatch_place, @deadline, @id_status, @weight, 0.0 ,@client_addresses, @payment_method, 0x0)
+
+			SELECT @id_order= SCOPE_IDENTITY()
+
+			INSERT INTO dbo.OrdersDetails (id_order, id_product, quantity, sell_price, checksum)
+			SELECT  @orderId, idProducto, @products.quantity, sell_price, HASHBYTES('SHA2_512', CONCAT(@products.quantity,'pura vida maes', @id_order, @id_client, sell_price))  
+      FROM dbo.Products 
+			INNER JOIN @products ON @products.product_name = Products.product_name
+
+			SELECT @total = SUM(sell_price * quantity) FROM dbo.OrdersDetails WHERE id_order = @orderId
+      SET @checksum = HASHBYTES('SHA2_512', CONCAT(@total,'pura vida maes', @id_client, @client_addresses))
+			UPDATE dbo.Orders 
+      SET total = @Total, checksum = @checksum
+      WHERE id_order = @orderId
+			
+			IF @InicieTransaccion=1 BEGIN
+				COMMIT
+			END
+		END TRY
+		BEGIN CATCH
+			SET @ErrorNumber = ERROR_NUMBER()
+			SET @ErrorSeverity = ERROR_SEVERITY()
+			SET @ErrorState = ERROR_STATE()
+			SET @Message = ERROR_MESSAGE()
+		
+			IF @InicieTransaccion=1 BEGIN
+				ROLLBACK
+			END
+			RAISERROR('%s - Error Number: %i', 
+				@ErrorSeverity, @ErrorState, @Message, @CustomError)
+		END CATCH	
+	END
+END
+RETURN 0
+GO
+
+/*Caso ok*/
+DECLARE @myProducts TVP_OrderProducts
+INSERT @myProducts VALUES 
+('Aguacate', 5),
+('Mango', 10),
+('Pipa', 2)
+
+exec dbo.[FeriaSP_PlaceOrder] 3, 1,'2023-02-25 20:30:00', 1, 1, 0, @myProducts
+select * from Orders where id_client = 3
+select * from OrdersDetails
+
+/*Error porque no puede insertar el null*/
+DECLARE @myProducts TVP_OrderProducts
+INSERT @myProducts VALUES 
+('AguacateX', 5),
+('MangoX', 10),
+('PipaX', 2)
+
+exec dbo.[FeriaSP_PlaceOrder] 3, 1,'2023-02-25 20:30:00', 1, 1, 0, @myProducts
+select * from Orders where id_client = 3
