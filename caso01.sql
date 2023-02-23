@@ -630,24 +630,24 @@ INSERT INTO Collaborators_Contacts (id_collaborator, id_contact) VALUES
   (2, 7),
   (3, 8),
   (4, 8);
-/*Falta el checksum*/
-INSERT INTO Products (product_name, id_unit, estimated_weight, min_quantity, max_quantity, photo_url, sell_price, total_quantity, [enabled], deleted)
+
+INSERT INTO Products (product_name, id_unit, estimated_weight, min_quantity, max_quantity, photo_url, sell_price, total_quantity, [enabled], deleted, checksum)
 VALUES
-('Manzana', 1, 0.3, 5, 20, 'https://picsum.photos/200/300', 5.5, 100, 1, 0),
-('Plátano', 1, 0.25, 5, 20, 'https://picsum.photos/200/300', 4.5, 80, 1, 0),
-('Fresa', 2, 0.1, 2, 10, 'https://picsum.photos/200/300', 10, 50, 1, 0),
-('Zanahoria', 3, 0.2, 3, 15, 'https://picsum.photos/200/300', 3.5, 120, 1, 0),
-('Papa', 3, 0.3, 5, 25, 'https://picsum.photos/200/300', 2.5, 150, 1, 0),
-('Cebolla', 3, 0.15, 3, 12, 'https://picsum.photos/200/300', 4, 90, 1, 0),
-('Tomate', 1, 0.2, 4, 18, 'https://picsum.photos/200/300', 3, 110, 1, 0),
-('Pepino', 1, 0.2, 4, 18, 'https://picsum.photos/200/300', 3.5, 80, 1, 0),
-('Lechuga', 2, 0.1, 2, 10, 'https://picsum.photos/200/300', 7.5, 70, 1, 0),
-('Espinaca', 2, 0.1, 2, 10, 'https://picsum.photos/200/300', 6.5, 60, 1, 0),
-('Brocoli', 3, 0.2, 3, 15, 'https://picsum.photos/200/300', 5.5, 80, 1, 0),
-('Pimiento', 1, 0.15, 3, 12, 'https://picsum.photos/200/300', 4.5, 90, 1, 0),
-('Calabaza', 3, 0.3, 5, 25, 'https://picsum.photos/200/300', 2, 130, 1, 0),
-('Esparrago', 2, 0.1, 2, 10, 'https://picsum.photos/200/300', 11, 30, 1, 0),
-('Champiñones', 4, 0.1, 2, 10, 'https://picsum.photos/200/300', 8.5, 40, 1, 0);
+('Manzana', 1, 0.3, 5, 20, 'https://picsum.photos/200/300', 5.5, 100, 1, 0, 0x0),
+('Plátano', 1, 0.25, 5, 20, 'https://picsum.photos/200/300', 4.5, 80, 1, 0, 0x0),
+('Fresa', 2, 0.1, 2, 10, 'https://picsum.photos/200/300', 10, 50, 1, 0, 0x0),
+('Zanahoria', 3, 0.2, 3, 15, 'https://picsum.photos/200/300', 3.5, 120, 1, 0, 0x0),
+('Papa', 3, 0.3, 5, 25, 'https://picsum.photos/200/300', 2.5, 150, 1, 0, 0x0),
+('Cebolla', 3, 0.15, 3, 12, 'https://picsum.photos/200/300', 4, 90, 1, 0, 0x0),
+('Tomate', 1, 0.2, 4, 18, 'https://picsum.photos/200/300', 3, 110, 1, 0, 0x0),
+('Pepino', 1, 0.2, 4, 18, 'https://picsum.photos/200/300', 3.5, 80, 1, 0, 0x0),
+('Lechuga', 2, 0.1, 2, 10, 'https://picsum.photos/200/300', 7.5, 70, 1, 0, 0x0),
+('Espinaca', 2, 0.1, 2, 10, 'https://picsum.photos/200/300', 6.5, 60, 1, 0, 0x0),
+('Brocoli', 3, 0.2, 3, 15, 'https://picsum.photos/200/300', 5.5, 80, 1, 0, 0x0),
+('Pimiento', 1, 0.15, 3, 12, 'https://picsum.photos/200/300', 4.5, 90, 1, 0, 0x0),
+('Calabaza', 3, 0.3, 5, 25, 'https://picsum.photos/200/300', 2, 130, 1, 0, 0x0),
+('Esparrago', 2, 0.1, 2, 10, 'https://picsum.photos/200/300', 11, 30, 1, 0, 0x0),
+('Champiñones', 4, 0.1, 2, 10, 'https://picsum.photos/200/300', 8.5, 40, 1, 0, 0x0);
 
 INSERT INTO Refills (contact, collection_place, id_product, quantity_estimated, buy_price, id_status, weight, height, deep)
 VALUES 
@@ -837,11 +837,35 @@ INSERT INTO ProductsPreparations (id_inventary, quantity, finish_time, preparati
 -- ProductsPreparations_Collaborators
 INSERT INTO ProductsPreparations_Collaborators (id_product_preparation, id_collaborator, preparation_type) VALUES (1, 2, 1), (1, 4, 2), (2, 5, 1);
 
+GO
+/*
+            Entrega preliminar #2
+*/
+-----------------------------------------------------------
+-- Punto 1: determinar si existe al menos una diferencia de carga de trabajo del 20% entre los dos días de entrega
+-- Autor: EGuzmán
+-- Fecha: 02/22/2023
+-----------------------------------------------------------
+SELECT CAST(deadline AS date) AS Día_entrega, COUNT(id_order) AS TotalPedidos, SUM([weight]) AS PesoTotal
+FROM Orders
+GROUP BY CAST(deadline AS date)
+ORDER BY deadline
 
-/*Entrega preliminar #2*/
+GO
+-----------------------------------------------------------
+-- Punto 2: cuáles son las principales razones por las que el consumidor devuelve producto
+-- Autor: EGuzmán
+-- Fecha: 02/22/2023
+-----------------------------------------------------------
+SELECT comment
+FROM Reviews
+INNER JOIN CommentTypes
+ON CommentTypes.id_type = Reviews.id_comment_type
+WHERE type_name = 'Devolución'
+GO
 
 -----------------------------------------------------------
--- Demostrar que las operaciones de ordenar productos y agregar productos a bodega pueden ser transaccionales
+-- Punto 3: demostrar que las operaciones de ordenar productos y agregar productos a bodega pueden ser transaccionales
 -----------------------------------------------------------
 
 
@@ -850,9 +874,10 @@ CREATE TYPE dbo.TVP_OrderProducts AS TABLE(
   quantity INT
 )
 GO
+
 -----------------------------------------------------------
 -- Autor: EGuzmán
--- Fecha: 02/17/2023
+-- Fecha: 02/22/2023
 -- Descripcion: procedimiento para registrar un pedido de un consumidor
 -----------------------------------------------------------
 CREATE PROCEDURE [dbo].[FeriaSP_PlaceOrder]
@@ -937,7 +962,7 @@ END
 RETURN 0
 GO
 
-/*Caso ok*/
+--Caso ok
 DECLARE @myProducts TVP_OrderProducts
 INSERT @myProducts VALUES 
 ('Aguacate', 5),
@@ -948,7 +973,7 @@ exec dbo.[FeriaSP_PlaceOrder] 3, 1,'2023-02-25 20:30:00', 1, 1, 0, @myProducts
 select * from Orders where id_client = 3
 select * from OrdersDetails
 
-/*Error porque no puede insertar el null*/
+-- Error porque no puede insertar el null
 DECLARE @myProducts TVP_OrderProducts
 INSERT @myProducts VALUES 
 ('AguacateX', 5),
@@ -957,3 +982,38 @@ INSERT @myProducts VALUES
 
 exec dbo.[FeriaSP_PlaceOrder] 3, 1,'2023-02-25 20:30:00', 1, 1, 0, @myProducts
 select * from Orders where id_client = 3
+
+GO
+-----------------------------------------------------------
+-- Punto 4: demostrar si va a ser posible crear vistas que ayuden a la implementación del sistema
+-- Autor: EGuzmán
+-- Fecha: 02/22/2023
+-----------------------------------------------------------
+
+-- Aqui voy a crear una vista de producto x proveedor para evitar los joins cada vez que se busque un provedor por un producto especifico
+CREATE VIEW View_Productors_Products AS
+SELECT DISTINCT
+  id_product, product_name, id_producer, producer_name, buy_price
+FROM Products
+Inner JOIN InventaryLogs
+ON InventaryLogs.id_product = Products.id_product
+INNER JOIN Producers
+ON Producers.id_producer = InventaryLogs.id_producer
+GO
+--Aqui voy a crear una vista para tener los clientes (que si han comprado) y donde compran, ignorando direcciones que no tengan compras
+CREATE VIEW View_RealClients_States AS
+SELECT DISTINCT
+  id_client, person_name, last_name, post_time, delivery_geo, district_name, state_name
+FROM Orders
+INNER JOIN Clients
+ON Orders.id_client = Clients.id_client
+INNER JOIN Persons
+ON Persons.id_person = Client.id_person
+INNER JOIN Clients_Addresses
+ON Clients_Addresses.id_cxa = Orders.id_cxa
+INNER JOIN Addresses
+ON Addresses.id_address = client_addresses.id_address
+INNER JOIN Districts
+ON Districts.id_district = Addresses.id_district
+INNER JOIN States
+ON States.id_state = Districts.id_state
