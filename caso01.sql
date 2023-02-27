@@ -415,7 +415,7 @@ CREATE TABLE Logs(
   id_action TINYINT FOREIGN KEY REFERENCES ActionLogs(id_action),
   user_name VARCHAR(255) NOT NULL,
   table_name VARCHAR(255) NOT NULL,
-  [description] VARCHAR(500) NOT NULL,
+  command NVARCHAR(max),
   checksum VARBINARY(250) NOT NULL
 );
 
@@ -432,6 +432,98 @@ GO
 --   | | |  _ < | | |_| | |_| | |___|  _ < ___) |
 --   |_| |_| \_\___\____|\____|_____|_| \_\____/ 
                                               
+INSERT INTO ActionLogs ([name])
+VALUES ('CREATE'), ('UPDATE'), ('DELETE');
+
+GO
+
+CREATE TRIGGER TR_ProductsLogs
+ON Products
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+	
+    DECLARE @user_name VARCHAR(255) = SYSTEM_USER
+    DECLARE @table_name VARCHAR(255) = 'Products'
+    DECLARE @command NVARCHAR(max)
+    DECLARE @post_time DATETIME
+    
+    SELECT @post_time = GETDATE()
+    SELECT @command = EVENTDATA().value('(/EVENT_INSTANCE/TSQLCommand/CommandText)[1]','nvarchar(max)')
+
+    INSERT INTO Logs (post_time, id_action, user_name, table_name, command, checksum)
+    SELECT @post_time,
+           CASE 
+               WHEN EXISTS (SELECT * FROM INSERTED) AND EXISTS (SELECT * FROM DELETED) THEN 2 -- Update
+               WHEN EXISTS (SELECT * FROM INSERTED) THEN 1 -- Insert
+               ELSE 3 -- Delete
+           END,
+           @user_name,
+           @table_name,
+           @command,
+           HASHBYTES('SHA2_512', CONCAT(@user_name,'pura vida maes', @table_name, @post_time))
+    FROM INSERTED
+END;
+
+GO
+
+CREATE TRIGGER TR_OrdersLogs
+ON Orders
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+	
+    DECLARE @user_name VARCHAR(255) = SYSTEM_USER
+    DECLARE @table_name VARCHAR(255) = 'Orders'
+    DECLARE @command NVARCHAR(max)
+    DECLARE @post_time DATETIME
+    
+    SELECT @post_time = GETDATE()
+    SELECT @command = EVENTDATA().value('(/EVENT_INSTANCE/TSQLCommand/CommandText)[1]','nvarchar(max)')
+
+    INSERT INTO Logs (post_time, id_action, user_name, table_name, command, checksum)
+    SELECT @post_time,
+           CASE 
+               WHEN EXISTS (SELECT * FROM INSERTED) AND EXISTS (SELECT * FROM DELETED) THEN 2 -- Update
+               WHEN EXISTS (SELECT * FROM INSERTED) THEN 1 -- Insert
+               ELSE 3 -- Delete
+           END,
+           @user_name,
+           @table_name,
+           @command,
+           HASHBYTES('SHA2_512', CONCAT(@user_name,'pura vida maes', @table_name, @post_time))
+    FROM INSERTED
+END;
+
+GO
+
+CREATE TRIGGER TR_OrdersDetailsLogs
+ON OrdersDetails
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+	
+    DECLARE @user_name VARCHAR(255) = SYSTEM_USER
+    DECLARE @table_name VARCHAR(255) = 'OrdersDetails'
+    DECLARE @command NVARCHAR(max)
+    DECLARE @post_time DATETIME
+    
+    SELECT @post_time = GETDATE()
+    SELECT @command = EVENTDATA().value('(/EVENT_INSTANCE/TSQLCommand/CommandText)[1]','nvarchar(max)')
+
+    INSERT INTO Logs (post_time, id_action, user_name, table_name, command, checksum)
+    SELECT @post_time,
+           CASE 
+               WHEN EXISTS (SELECT * FROM INSERTED) AND EXISTS (SELECT * FROM DELETED) THEN 2 -- Update
+               WHEN EXISTS (SELECT * FROM INSERTED) THEN 1 -- Insert
+               ELSE 3 -- Delete
+           END,
+           @user_name,
+           @table_name,
+           @command,
+           HASHBYTES('SHA2_512', CONCAT(@user_name,'pura vida maes', @table_name, @post_time))
+    FROM INSERTED
+END;
 
 
 GO
