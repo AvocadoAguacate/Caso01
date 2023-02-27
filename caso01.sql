@@ -14,6 +14,13 @@ USE caso01
 
 GO
 
+--   ____ ____  _____    _  _____ _____   _____  _    ____  _     _____ ____  
+--  / ___|  _ \| ____|  / \|_   _| ____| |_   _|/ \  | __ )| |   | ____/ ___| 
+-- | |   | |_) |  _|   / _ \ | | |  _|     | | / _ \ |  _ \| |   |  _| \___ \ 
+-- | |___|  _ <| |___ / ___ \| | | |___    | |/ ___ \| |_) | |___| |___ ___) |
+--  \____|_| \_\_____/_/   \_\_| |_____|   |_/_/   \_\____/|_____|_____|____/ 
+
+
 CREATE TABLE StorageTypes(
   id_Storage_type INT IDENTITY(1,1) PRIMARY KEY,
   type_name NVARCHAR(255) NOT NULL
@@ -397,10 +404,45 @@ CREATE TABLE ProductsPreparations_Collaborators(
   preparation_type INT FOREIGN KEY REFERENCES PreparationsTypes(id_type)
 );
 
+CREATE TABLE ActionLogs(
+  id_action TINYINT IDENTITY(1, 1) PRIMARY KEY,
+  [name] NVARCHAR(150) NOT NULL
+);
+
+CREATE TABLE Logs(
+  id_log BIGINT IDENTITY(1, 1) PRIMARY KEY,
+  post_time DATETIME DEFAULT GETDATE(),
+  id_action TINYINT FOREIGN KEY REFERENCES ActionLogs(id_action),
+  user_name VARCHAR(255) NOT NULL,
+  table_name VARCHAR(255) NOT NULL,
+  [description] VARCHAR(500) NOT NULL,
+  checksum VARBINARY(250) NOT NULL
+);
+
 GO
-/*
-Dummy data
-*/
+
+--   ____ ____  _____    _  _____ _____ 
+--  / ___|  _ \| ____|  / \|_   _| ____|
+-- | |   | |_) |  _|   / _ \ | | |  _|  
+-- | |___|  _ <| |___ / ___ \| | | |___ 
+--  \____|_| \_\_____/_/   \_\_| |_____|                                    
+--  _____ ____  ___ ____  ____ _____ ____  ____  
+-- |_   _|  _ \|_ _/ ___|/ ___| ____|  _ \/ ___| 
+--   | | | |_) || | |  _| |  _|  _| | |_) \___ \ 
+--   | | |  _ < | | |_| | |_| | |___|  _ < ___) |
+--   |_| |_| \_\___\____|\____|_____|_| \_\____/ 
+                                              
+
+
+GO
+
+--  _____ _____ ____ _____   ____    _  _____  _    
+-- |_   _| ____/ ___|_   _| |  _ \  / \|_   _|/ \   
+--   | | |  _| \___ \ | |   | | | |/ _ \ | | / _ \  
+--   | | | |___ ___) || |   | |_| / ___ \| |/ ___ \ 
+--   |_| |_____|____/ |_|   |____/_/   \_\_/_/   \_\
+
+
 INSERT INTO StorageTypes (type_name)
 VALUES ('Cold storage'), ('Dry storage'), ('Frozen storage');
 
@@ -821,7 +863,7 @@ VALUES
 (3, 2, '2023-02-28T16:15:00', 'https://example.com/photo3', CAST('POINT(-72.345678 45.890123)' AS GEOGRAPHY), 1),
 (4, 2, '2023-02-28T17:30:00', 'https://example.com/photo4', CAST('POINT(-72.456789 45.901234)' AS GEOGRAPHY), 3),
 (5, 2, '2023-02-28T18:45:00', 'https://example.com/photo5', CAST('POINT(-72.567890 45.012345)' AS GEOGRAPHY), 2);
-
+              
 -- OrdersPreparations
 INSERT INTO OrdersPreparations (id_order, finish_time, preparation_status) VALUES (2, '2023-02-12 13:00:00', 1), 
 (4, '2023-02-10 14:30:00', 1), (6, '2023-02-09 11:00:00', 2), (8, '2023-02-08 15:45:00', 2);
