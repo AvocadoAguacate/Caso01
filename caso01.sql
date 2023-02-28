@@ -1250,7 +1250,7 @@ GO
 -- Aqui voy a crear una vista de producto x proveedor para evitar los joins cada vez que se busque un provedor por un producto especifico
 CREATE VIEW View_Productors_Products AS
 SELECT DISTINCT
-  id_product, product_name, id_producer, producer_name, buy_price
+  Products.id_product, product_name, Producers.id_producer, producer_name, buy_price
 FROM Products
 Inner JOIN InventaryLogs
 ON InventaryLogs.id_product = Products.id_product
@@ -1260,16 +1260,16 @@ GO
 --Aqui voy a crear una vista para tener los clientes (que si han comprado) y donde compran, ignorando direcciones que no tengan compras
 CREATE VIEW View_RealClients_States AS
 SELECT DISTINCT
-  id_client, person_name, last_name, post_time, delivery_geo, district_name, state_name
+  Clients.id_client, person_name, last_name, Orders.post_time, district_name, state_name
 FROM Orders
 INNER JOIN Clients
 ON Orders.id_client = Clients.id_client
 INNER JOIN Persons
-ON Persons.id_person = Client.id_person
+ON Persons.id_person = Clients.id_person
 INNER JOIN Clients_Addresses
-ON Clients_Addresses.id_cxa = Orders.id_cxa
+ON Clients_Addresses.id_cxa = Orders.id_client_address
 INNER JOIN Addresses
-ON Addresses.id_address = client_addresses.id_address
+ON Addresses.id_address = Clients_Addresses.id_address
 INNER JOIN Districts
 ON Districts.id_district = Addresses.id_district
 INNER JOIN States
