@@ -557,7 +557,7 @@ INSERT INTO DeliveryStatus (status_name)
 VALUES ('In Transit'), ('Delivered'), ('Delayed'), ('Cancelled');
 
 INSERT INTO OrderStatus (status_name)
-VALUES ('Pending'), ('Confirmed'), ('In Process'), ('Shipped'), ('Delivered'), ('Cancelled');
+VALUES ('Pending'), ('Confirmed'), ('In Process'), ('Shipped'), ('Por entregar') ,('Delivered'), ('Cancelled');
 
 INSERT INTO PreparationsStatus (status_name)
 VALUES ('Not Started'), ('In Progress'), ('Complete'), ('Cancelled');
@@ -1157,9 +1157,12 @@ BEGIN
 
 	SELECT @id_status = id_status FROM dbo.OrderStatus WHERE status_name = 'Por entregar'
 	SELECT @productCount = COUNT(*) FROM @products
-  SELECT @weight = SUM(Products.estimated_weight * @products.quantity)
-  FROM Products
-  INNER JOIN products ON Products.product_name = products.product_name
+  SELECT @weight = SUM(Products.estimated_weight * p.quantity)
+  FROM (
+    SELECT product_name, quantity
+    FROM @products
+  ) AS p
+  INNER JOIN Products ON Products.product_name = p.product_name
 
 	IF (@productCount>0) BEGIN
 
@@ -1175,20 +1178,25 @@ BEGIN
 
 			INSERT INTO dbo.Orders (id_client, discount, dispatch_place, deadline, id_status, [weight], total, id_client_address, payment_method, checksum)
 			VALUES
-			(@clientId, @discount, @dispatch_place, @deadline, @id_status, @weight, 0.0 ,@client_addresses, @payment_method, 0x0)
+			(@id_client, @discount, @dispatch_place, @deadline, @id_status, @weight, 0.0 ,@client_addresses, @payment_method, 0x0)
 
 			SELECT @id_order= SCOPE_IDENTITY()
 
 			INSERT INTO dbo.OrdersDetails (id_order, id_product, quantity, sell_price, checksum)
-			SELECT  @orderId, idProducto, @products.quantity, sell_price, HASHBYTES('SHA2_512', CONCAT(@products.quantity,'pura vida maes', @id_order, @id_client, sell_price))  
-      FROM dbo.Products 
-			INNER JOIN @products ON @products.product_name = Products.product_name
+			SELECT  @id_order, id_product, p.quantity, sell_price, HASHBYTES('SHA2_512', CONCAT(p.quantity,'pura vida maes', @id_order, @id_client, sell_price))  
+      FROM(
+        SELECT product_name, quantity
+      FROM @products
+      ) AS p
+      INNER JOIN Products ON Products.product_name = p.product_name
+      -- FROM dbo.Products 
+			-- INNER JOIN @products ON Products.product_name = @products.product_name
 
-			SELECT @total = SUM(sell_price * quantity) FROM dbo.OrdersDetails WHERE id_order = @orderId
+			SELECT @total = SUM(sell_price * quantity) FROM dbo.OrdersDetails WHERE id_order = @id_order
       SET @checksum = HASHBYTES('SHA2_512', CONCAT(@total,'pura vida maes', @id_client, @client_addresses))
 			UPDATE dbo.Orders 
       SET total = @Total, checksum = @checksum
-      WHERE id_order = @orderId
+      WHERE id_order = @id_order
 			
 			IF @InicieTransaccion=1 BEGIN
 				COMMIT
@@ -1211,26 +1219,26 @@ END
 RETURN 0
 GO
 
--- --Caso ok
--- DECLARE @myProducts TVP_OrderProducts
--- INSERT @myProducts VALUES 
--- ('Aguacate', 5),
--- ('Mango', 10),
--- ('Pipa', 2)
+--Caso ok
+DECLARE @myProducts TVP_OrderProducts
+INSERT @myProducts VALUES 
+('Pepino', 5),
+('Lechuga', 10),
+('Manzana', 2)
 
--- exec dbo.[FeriaSP_PlaceOrder] 3, 1,'2023-02-25 20:30:00', 1, 1, 0, @myProducts
--- select * from Orders where id_client = 3
--- select * from OrdersDetails
+exec dbo.[FeriaSP_PlaceOrder] 3, 1,'2023-02-25 20:30:00', 1, 1, 0, @myProducts
+select * from Orders where id_client = 3
+select * from OrdersDetails
 
--- -- Error porque no puede insertar el null
--- DECLARE @myProducts TVP_OrderProducts
--- INSERT @myProducts VALUES 
--- ('AguacateX', 5),
--- ('MangoX', 10),
--- ('PipaX', 2)
+-- Error porque no puede insertar el null
+DECLARE @myProducts TVP_OrderProducts
+INSERT @myProducts VALUES 
+('Pepinox', 5),
+('Lechugax', 10),
+('Manzanax', 2)
 
--- exec dbo.[FeriaSP_PlaceOrder] 3, 1,'2023-02-25 20:30:00', 1, 1, 0, @myProducts
--- select * from Orders where id_client = 3
+exec dbo.[FeriaSP_PlaceOrder] 3, 1,'2023-02-25 20:30:00', 1, 1, 0, @myProducts
+select * from Orders where id_client = 3
 
 GO
 -----------------------------------------------------------
