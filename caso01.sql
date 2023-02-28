@@ -734,10 +734,10 @@ INSERT INTO Contacts (id_contact_type, contact) VALUES
   (2, 'client2@example.com'),
   (3, 'client3@example.com'),
   (4, 'client4@example.com'),
-  (5, 'collaborator1@example.com'),
-  (6, 'collaborator2@example.com'),
-  (7, 'collaborator3@example.com'),
-  (8, 'collaborator4@example.com');
+  (1, 'collaborator1@example.com'),
+  (2, 'collaborator2@example.com'),
+  (3, 'collaborator3@example.com'),
+  (4, 'collaborator4@example.com');
 
 -- Datos para Producers_Contacts
 INSERT INTO Producers_Contacs (id_producer, contact_procedure, id_contact) VALUES
@@ -828,16 +828,16 @@ VALUES
   (8, '2023-02-08 17:00:00', 150, 2.75, 1, 3, 8),
   (9, '2023-02-09 18:00:00', 200, 3.50, 1, 4, 9),
   (10, '2023-02-10 19:00:00', 75, 1.25, 1, 5, 10),
-  (11, '2023-02-11 20:00:00', 125, 2.00, 1, 1, 11),
-  (12, '2023-02-12 21:00:00', 300, 2.50, 1, 2, 12),
-  (13, '2023-02-13 22:00:00', 50, 3.75, 1, 3, 13),
-  (14, '2023-02-14 23:00:00', 175, 4.25, 1, 4, 14),
-  (15, '2023-02-15 10:00:00', 225, 2.00, 1, 5, 15),
-  (1, '2023-02-16 11:00:00', 100, 1.50, 1, 1, 16),
-  (2, '2023-02-17 12:00:00', 125, 2.25, 1, 2, 17),
-  (5, '2023-02-18 13:00:00', 150, 3.00, 1, 3, 18),
-  (6, '2023-02-19 14:00:00', 250, 4.50, 1, 4, 19),
-  (2, '2023-02-20 15:00:00', 75, 1.75, 1, 5, 20);
+  (11, '2023-02-11 20:00:00', 125, 2.00, 1, 1, 1),
+  (12, '2023-02-12 21:00:00', 300, 2.50, 1, 2, 2),
+  (13, '2023-02-13 22:00:00', 50, 3.75, 1, 3, 3),
+  (14, '2023-02-14 23:00:00', 175, 4.25, 1, 4, 4),
+  (15, '2023-02-15 10:00:00', 225, 2.00, 1, 5, 5),
+  (1, '2023-02-16 11:00:00', 100, 1.50, 1, 1, 6),
+  (2, '2023-02-17 12:00:00', 125, 2.25, 1, 2, 1),
+  (5, '2023-02-18 13:00:00', 150, 3.00, 1, 3, 8),
+  (6, '2023-02-19 14:00:00', 250, 4.50, 1, 4, 9),
+  (2, '2023-02-20 15:00:00', 75, 1.75, 1, 5, 2);
 
 INSERT INTO Cards (id_client, post_time, card_number, expiration_date, cvv)
 VALUES 
@@ -864,22 +864,22 @@ VALUES
 (2, DATEADD(DAY, -14, GETDATE()), 15, 3, DATEADD(DAY, 4, GETDATE()), 2, 20.0, 300.00, 2, 2, 0x0),
 (3, DATEADD(DAY, -21, GETDATE()), 5, 4, DATEADD(DAY, 6, GETDATE()), 3, 5.5, 100.00, 3, 3, 0x0),
 (4, DATEADD(DAY, -7, GETDATE()), 0, 5, DATEADD(DAY, 2, GETDATE()), 2, 8.0, 150.00, 4, 4, 0x0),
-(5, DATEADD(DAY, -14, GETDATE()), 25, 6, DATEADD(DAY, 4, GETDATE()), 1, 15.5, 250.00, 5, 5, 0x0),
+(5, DATEADD(DAY, -14, GETDATE()), 25, 6, DATEADD(DAY, 4, GETDATE()), 1, 15.5, 250.00, 5, 1, 0x0),
 (6, DATEADD(DAY, -21, GETDATE()), 20, 7, DATEADD(DAY, 6, GETDATE()), 3, 10.0, 150.00, 6, 1, 0x0),
 (7, DATEADD(DAY, -7, GETDATE()), 5, 8, DATEADD(DAY, 2, GETDATE()), 2, 7.5, 100.00, 7, 2, 0x0),
 (8, DATEADD(DAY, -14, GETDATE()), 15, 9, DATEADD(DAY, 4, GETDATE()), 1, 12.0, 180.00, 8, 3, 0x0),
 (9, DATEADD(DAY, -21, GETDATE()), 10, 10, DATEADD(DAY, 6, GETDATE()), 3, 18.0, 300.00, 9, 4, 0x0),
-(10, DATEADD(DAY, -7, GETDATE()), 5, 1, DATEADD(DAY, 2, GETDATE()), 2, 9.0, 130.00, 10, 5, 0x0),
+(10, DATEADD(DAY, -7, GETDATE()), 5, 1, DATEADD(DAY, 2, GETDATE()), 2, 9.0, 130.00, 10, 1, 0x0),
 (1, DATEADD(DAY, -14, GETDATE()), 0, 3, DATEADD(DAY, 3, GETDATE()), 1, 8.5, 150.00, 2, 1, 0x0),
 (2, DATEADD(DAY, -21, GETDATE()), 10, 4, DATEADD(DAY, 5, GETDATE()), 2, 15.0, 250.00, 3, 2, 0x0),
 (3, DATEADD(DAY, -7, GETDATE()), 25, 5, DATEADD(DAY, 1, GETDATE()), 3, 6.0, 100.00, 4, 3, 0x0),
 (4, DATEADD(DAY, -14, GETDATE()), 5, 6, DATEADD(DAY, 3, GETDATE()), 2, 10.5, 200.00, 5, 4, 0x0),
-(5, DATEADD(DAY, -21, GETDATE()), 15, 7, DATEADD(DAY, 5, GETDATE()), 1, 12.0, 180.00, 6, 5, 0x0),
+(5, DATEADD(DAY, -21, GETDATE()), 15, 7, DATEADD(DAY, 5, GETDATE()), 1, 12.0, 180.00, 6, 1, 0x0),
 (6, DATEADD(DAY, -7, GETDATE()), 10, 8, DATEADD(DAY, 1, GETDATE()), 3, 16.0, 300.00, 7, 1, 0x0),
 (7, DATEADD(DAY, -14, GETDATE()), 0, 9, DATEADD(DAY, 3, GETDATE()), 2, 9.5, 130.00, 8, 2, 0x0),
 (8, DATEADD(DAY, -21, GETDATE()), 20, 10, DATEADD(DAY, 5, GETDATE()), 1, 18.0, 280.00, 9, 3, 0x0),
 (9, DATEADD(DAY, -7, GETDATE()), 15, 1, DATEADD(DAY, 1, GETDATE()), 3, 5.5, 90.00, 10, 4, 0x0),
-(10, DATEADD(DAY, -14, GETDATE()), 5, 2, DATEADD(DAY, 3, GETDATE()), 2, 11.0, 190.00, 1, 5, 0x0),
+(10, DATEADD(DAY, -14, GETDATE()), 5, 2, DATEADD(DAY, 3, GETDATE()), 2, 11.0, 190.00, 1, 1, 0x0),
 (1, DATEADD(DAY, -21, GETDATE()), 10, 3, DATEADD(DAY, 5, GETDATE()), 1, 13.5, 220.00, 2, 1, 0x0),
 (2, DATEADD(DAY, -7, GETDATE()), 25, 4, DATEADD(DAY, 1, GETDATE()), 2, 7.0, 120.00, 3, 2, 0x0),
 (3, DATEADD(DAY, -14, GETDATE()), 0, 5, DATEADD(DAY, 3, GETDATE()), 3, 11.5, 200.00, 4, 3, 0x0);
@@ -1043,19 +1043,26 @@ INNER JOIN Persons
   ON Clients.id_person = Persons.id_person
 GROUP BY Orders.id_client, Persons.person_name, Persons.last_name, Persons.username
 ORDER BY total_compras DESC;
-
-/*cuál es el top 5 de productos más vendidos en los últimos 15 días*/ 
+GO
+-----------------------------------------------------------
+-- Punto 2: cuál es el top 5 de productos más vendidos en los últimos 15 días
+-- Autor: EGuzmán
+-- Fecha: 02/27/2023
+-----------------------------------------------------------
 SELECT TOP 5 
-  InventaryLogs.id_product as Producto_más_vendido, SUM(OrdersDetails.quantity * OrdersDetails.sell_price) AS total_vendido
+  OrdersDetails.id_product as Producto_más_vendido, SUM(OrdersDetails.quantity * OrdersDetails.sell_price) AS total_vendido
   FROM Orders
   INNER JOIN OrdersDetails
   ON OrdersDetails.id_order = Orders.id_order
-  INNER JOIN InventaryLogs
-  ON InventaryLogs.id_inventary_logs = OrdersDetails.id_inventary
   WHERE DATEDIFF(DAY, Orders.post_time, GETDATE()) < 16
-  GROUP BY InventaryLogs.id_product
+  GROUP BY OrdersDetails.id_product
   ORDER BY total_vendido DESC
-/*cuál es el total de compras por persona*/
+ GO
+-----------------------------------------------------------
+-- Punto 3: cuál es el total de compras por persona
+-- Autor: EGuzmán
+-- Fecha: 02/27/2023
+-----------------------------------------------------------
 SELECT 
   Orders.id_client AS cliente,
   Persons.person_name AS Nombre, 
@@ -1068,14 +1075,18 @@ SELECT
   INNER JOIN Persons
   ON Clients.id_person = Persons.id_person
   GROUP BY Orders.id_client, Persons.person_name, Persons.last_name, Persons.username
-
-/*cuál es el total vendido por producto*/
+GO
+-----------------------------------------------------------
+-- Punto 4: cuál es el total vendido por producto
+-- Autor: EGuzmán
+-- Fecha: 02/27/2023
+-----------------------------------------------------------
 SELECT 
-	InventaryLogs.id_product as Producto, SUM(OrdersDetails.quantity * OrdersDetails.sell_price) AS total_vendido
+	OrdersDetails.id_product AS Producto, Products.product_name AS nombre, SUM(OrdersDetails.quantity * OrdersDetails.sell_price) AS total_vendido
   FROM OrdersDetails
-  INNER JOIN InventaryLogs
-  ON InventaryLogs.id_inventary_logs = OrdersDetails.id_inventary
-  GROUP BY InventaryLogs.id_product
+  INNER JOIN Products
+  ON Products.id_product = OrdersDetails.id_product
+  GROUP BY OrdersDetails.id_product, Products.product_name
 /*
             Entrega preliminar #2
 */
