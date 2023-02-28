@@ -858,18 +858,31 @@ VALUES
 (5, '2023-02-25 14:59:32', 4134156118833619, '2024-03-01', 789);
 
 -- Orders
-INSERT INTO Orders(id_client, post_time, discount, dispatch_place, deadline, id_status, [weight], total, id_client_address, payment_method, checksum)
+INSERT INTO Orders (id_client, post_time, discount, dispatch_place, deadline, id_status, [weight], total, id_client_address, payment_method, checksum)
 VALUES 
-(1, '2023-02-18 09:00:00', 0, 1, '2023-02-28 23:59:59', 1, 25, 300, 1, 1, 0x0),
-(2, '2023-02-18 11:00:00', 10, 2, '2023-03-01 12:00:00', 1, 15, 200, 2, 2, 0x0),
-(3, '2023-02-18 12:00:00', 5, 1, '2023-02-28 23:59:59', 2, 20, 250, 3, 3, 0x0),
-(4, '2023-02-18 15:00:00', 20, 2, '2023-02-28 23:59:59', 1, 30, 350, 4, 1, 0x0),
-(5, '2023-02-19 10:00:00', 5, 1, '2023-02-28 23:59:59', 3, 10, 150, 5, 2, 0x0),
-(6, '2023-02-19 13:00:00', 0, 2, '2023-03-01 12:00:00', 1, 45, 500, 6, 3, 0x0),
-(7, '2023-02-20 08:00:00', 15, 1, '2023-03-01 12:00:00', 2, 20, 300, 7, 1, 0x0),
-(8, '2023-02-20 09:00:00', 5, 2, '2023-03-01 12:00:00', 1, 35, 400, 8, 2, 0x0),
-(9, '2023-02-21 14:00:00', 0, 1, '2023-03-01 12:00:00', 1, 25, 300, 9, 3, 0x0),
-(10, '2023-02-21 15:00:00', 10, 2, '2023-03-01 12:00:00', 3, 15, 200, 10, 1, 0x0)
+(1, DATEADD(DAY, -7, GETDATE()), 10, 2, DATEADD(DAY, 2, GETDATE()), 1, 10.5, 200.00, 1, 1, 0x0),
+(2, DATEADD(DAY, -14, GETDATE()), 15, 3, DATEADD(DAY, 4, GETDATE()), 2, 20.0, 300.00, 2, 2, 0x0),
+(3, DATEADD(DAY, -21, GETDATE()), 5, 4, DATEADD(DAY, 6, GETDATE()), 3, 5.5, 100.00, 3, 3, 0x0),
+(4, DATEADD(DAY, -7, GETDATE()), 0, 5, DATEADD(DAY, 2, GETDATE()), 2, 8.0, 150.00, 4, 4, 0x0),
+(5, DATEADD(DAY, -14, GETDATE()), 25, 6, DATEADD(DAY, 4, GETDATE()), 1, 15.5, 250.00, 5, 5, 0x0),
+(6, DATEADD(DAY, -21, GETDATE()), 20, 7, DATEADD(DAY, 6, GETDATE()), 3, 10.0, 150.00, 6, 1, 0x0),
+(7, DATEADD(DAY, -7, GETDATE()), 5, 8, DATEADD(DAY, 2, GETDATE()), 2, 7.5, 100.00, 7, 2, 0x0),
+(8, DATEADD(DAY, -14, GETDATE()), 15, 9, DATEADD(DAY, 4, GETDATE()), 1, 12.0, 180.00, 8, 3, 0x0),
+(9, DATEADD(DAY, -21, GETDATE()), 10, 10, DATEADD(DAY, 6, GETDATE()), 3, 18.0, 300.00, 9, 4, 0x0),
+(10, DATEADD(DAY, -7, GETDATE()), 5, 1, DATEADD(DAY, 2, GETDATE()), 2, 9.0, 130.00, 10, 5, 0x0),
+(1, DATEADD(DAY, -14, GETDATE()), 0, 3, DATEADD(DAY, 3, GETDATE()), 1, 8.5, 150.00, 2, 1, 0x0),
+(2, DATEADD(DAY, -21, GETDATE()), 10, 4, DATEADD(DAY, 5, GETDATE()), 2, 15.0, 250.00, 3, 2, 0x0),
+(3, DATEADD(DAY, -7, GETDATE()), 25, 5, DATEADD(DAY, 1, GETDATE()), 3, 6.0, 100.00, 4, 3, 0x0),
+(4, DATEADD(DAY, -14, GETDATE()), 5, 6, DATEADD(DAY, 3, GETDATE()), 2, 10.5, 200.00, 5, 4, 0x0),
+(5, DATEADD(DAY, -21, GETDATE()), 15, 7, DATEADD(DAY, 5, GETDATE()), 1, 12.0, 180.00, 6, 5, 0x0),
+(6, DATEADD(DAY, -7, GETDATE()), 10, 8, DATEADD(DAY, 1, GETDATE()), 3, 16.0, 300.00, 7, 1, 0x0),
+(7, DATEADD(DAY, -14, GETDATE()), 0, 9, DATEADD(DAY, 3, GETDATE()), 2, 9.5, 130.00, 8, 2, 0x0),
+(8, DATEADD(DAY, -21, GETDATE()), 20, 10, DATEADD(DAY, 5, GETDATE()), 1, 18.0, 280.00, 9, 3, 0x0),
+(9, DATEADD(DAY, -7, GETDATE()), 15, 1, DATEADD(DAY, 1, GETDATE()), 3, 5.5, 90.00, 10, 4, 0x0),
+(10, DATEADD(DAY, -14, GETDATE()), 5, 2, DATEADD(DAY, 3, GETDATE()), 2, 11.0, 190.00, 1, 5, 0x0),
+(1, DATEADD(DAY, -21, GETDATE()), 10, 3, DATEADD(DAY, 5, GETDATE()), 1, 13.5, 220.00, 2, 1, 0x0),
+(2, DATEADD(DAY, -7, GETDATE()), 25, 4, DATEADD(DAY, 1, GETDATE()), 2, 7.0, 120.00, 3, 2, 0x0),
+(3, DATEADD(DAY, -14, GETDATE()), 0, 5, DATEADD(DAY, 3, GETDATE()), 3, 11.5, 200.00, 4, 3, 0x0);
 
 INSERT INTO OrdersDetails (id_order, id_product, quantity, sell_price, checksum)
 VALUES 
@@ -907,7 +920,42 @@ VALUES
 (10, 3, 2, 7.99, 0x0),
 (10, 6, 1, 3.99, 0x0),
 (10, 9, 2, 6.99, 0x0),
-(10, 13, 1, 4.99, 0x0);
+(10, 13, 1, 4.99, 0x0),
+(11, 1, 2, 10.99, 0x0),
+(11, 5, 1, 5.99, 0x0),
+(11, 8, 3, 2.99, 0x0),
+(12, 3, 2, 7.99, 0x0),
+(12, 6, 1, 3.99, 0x0),
+(12, 9, 2, 6.99, 0x0),
+(13, 13, 1, 4.99, 0x0),
+(13, 2, 4, 8.99, 0x0),
+(13, 7, 2, 4.99, 0x0),
+(13, 11, 3, 3.99, 0x0),
+(14, 4, 1, 12.99, 0x0),
+(14, 10, 1, 7.99, 0x0),
+(14, 14, 2, 6.99, 0x0),
+(15, 15, 1, 4.99, 0x0),
+(15, 1, 2, 10.99, 0x0),
+(15, 5, 1, 5.99, 0x0),
+(16, 8, 3, 2.99, 0x0),
+(16, 3, 2, 7.99, 0x0),
+(17, 6, 1, 3.99, 0x0),
+(17, 9, 2, 6.99, 0x0),
+(17, 13, 1, 4.99, 0x0),
+(18, 2, 4, 8.99, 0x0),
+(18, 7, 2, 4.99, 0x0),
+(18, 11, 3, 3.99, 0x0),
+(18, 4, 1, 12.99, 0x0),
+(19, 10, 1, 7.99, 0x0),
+(19, 14, 2, 6.99, 0x0),
+(20, 15, 1, 4.99, 0x0),
+(20, 1, 2, 10.99, 0x0),
+(21, 5, 1, 5.99, 0x0),
+(21, 8, 3, 2.99, 0x0),
+(21, 3, 2, 7.99, 0x0),
+(22, 6, 1, 3.99, 0x0),
+(23, 9, 2, 6.99, 0x0),
+(23, 13, 1, 4.99, 0x0);
 
 -- Orders_Cards data
 INSERT INTO Orders_Cards (id_card, id_order, post_time) VALUES 
