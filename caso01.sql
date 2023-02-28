@@ -1281,11 +1281,24 @@ GO
 -- Autor: EGuzmán
 -- Fecha: 02/22/2023
 -----------------------------------------------------------
-
-
+-----------------------------------------------------------
+-- Dirty read
+-----------------------------------------------------------
+--SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
+SELECT sell_price FROM Products WHERE id_product = 1
+--terminal 1
+BEGIN TRANSACTION
+UPDATE Products SET sell_price = 666 WHERE id_product = 1
+--ejecutar la terminal 2 antes
+COMMIT TRANSACTION
+--terminal 2
+SELECT sell_price FROM Products WHERE id_product = 1
+--Solución
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
 -----------------------------------------------------------
 -- Lost Update 
 -----------------------------------------------------------
+--SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
 SELECT total_quantity FROM Products WHERE id_product = 1
 --terminal 1
 BEGIN TRANSACTION
@@ -1296,3 +1309,19 @@ COMMIT TRANSACTION
 BEGIN TRANSACTION
 UPDATE Products SET total_quantity = total_quantity - 10 WHERE id_product = 1
 COMMIT TRANSACTION
+--Solución
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+-----------------------------------------------------------
+-- Phantoms
+-----------------------------------------------------------
+--SET TRANSACTION ISOLATION LEVEL READ COMMITTED ;
+--terminal 1
+BEGIN TRANSACTION;
+--espero el select de la segunda terminal
+INSERT INTO StorageType(type_name) VALUES ('soy un fantasma');
+--terminal 2
+SELECT * FROM StorageTypes;
+--espero el fantasma
+SELECT * FROM StorageTypes;
+--Solución
+SET TRANSACTION ISOLATION LEVEL SNAPSHOT; 
