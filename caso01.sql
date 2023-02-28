@@ -1020,6 +1020,62 @@ INSERT INTO ProductsPreparations (id_inventary, quantity, finish_time, preparati
 INSERT INTO ProductsPreparations_Collaborators (id_product_preparation, id_collaborator, preparation_type) VALUES (1, 2, 1), (1, 4, 2), (2, 5, 1);
 
 GO
+
+
+/*
+            Entrega preliminar #1
+*/
+-----------------------------------------------------------
+-- Punto 1: cuál es el top 5 de compradores estrella
+-- Autor: EGuzmán
+-- Fecha: 02/27/2023
+-----------------------------------------------------------
+SELECT TOP 5 
+  Orders.id_client AS id_cliente_estrella, 
+  Persons.person_name AS Nombre, 
+  Persons.last_name AS Apellido, 
+  Persons.username, 
+  SUM(Orders.total) AS total_compras
+FROM Orders
+INNER JOIN Clients
+  ON Clients.id_client = Orders.id_client
+INNER JOIN Persons
+  ON Clients.id_person = Persons.id_person
+GROUP BY Orders.id_client, Persons.person_name, Persons.last_name, Persons.username
+ORDER BY total_compras DESC;
+
+/*cuál es el top 5 de productos más vendidos en los últimos 15 días*/ 
+SELECT TOP 5 
+  InventaryLogs.id_product as Producto_más_vendido, SUM(OrdersDetails.quantity * OrdersDetails.sell_price) AS total_vendido
+  FROM Orders
+  INNER JOIN OrdersDetails
+  ON OrdersDetails.id_order = Orders.id_order
+  INNER JOIN InventaryLogs
+  ON InventaryLogs.id_inventary_logs = OrdersDetails.id_inventary
+  WHERE DATEDIFF(DAY, Orders.post_time, GETDATE()) < 16
+  GROUP BY InventaryLogs.id_product
+  ORDER BY total_vendido DESC
+/*cuál es el total de compras por persona*/
+SELECT 
+  Orders.id_client AS cliente,
+  Persons.person_name AS Nombre, 
+  Persons.last_name AS Apellido, 
+  Persons.username, 
+  SUM(Orders.total) AS total_compras
+  FROM Orders
+  INNER JOIN Clients
+  ON Clients.id_client = Orders.id_client
+  INNER JOIN Persons
+  ON Clients.id_person = Persons.id_person
+  GROUP BY Orders.id_client, Persons.person_name, Persons.last_name, Persons.username
+
+/*cuál es el total vendido por producto*/
+SELECT 
+	InventaryLogs.id_product as Producto, SUM(OrdersDetails.quantity * OrdersDetails.sell_price) AS total_vendido
+  FROM OrdersDetails
+  INNER JOIN InventaryLogs
+  ON InventaryLogs.id_inventary_logs = OrdersDetails.id_inventary
+  GROUP BY InventaryLogs.id_product
 /*
             Entrega preliminar #2
 */
@@ -1144,26 +1200,26 @@ END
 RETURN 0
 GO
 
---Caso ok
-DECLARE @myProducts TVP_OrderProducts
-INSERT @myProducts VALUES 
-('Aguacate', 5),
-('Mango', 10),
-('Pipa', 2)
+-- --Caso ok
+-- DECLARE @myProducts TVP_OrderProducts
+-- INSERT @myProducts VALUES 
+-- ('Aguacate', 5),
+-- ('Mango', 10),
+-- ('Pipa', 2)
 
-exec dbo.[FeriaSP_PlaceOrder] 3, 1,'2023-02-25 20:30:00', 1, 1, 0, @myProducts
-select * from Orders where id_client = 3
-select * from OrdersDetails
+-- exec dbo.[FeriaSP_PlaceOrder] 3, 1,'2023-02-25 20:30:00', 1, 1, 0, @myProducts
+-- select * from Orders where id_client = 3
+-- select * from OrdersDetails
 
--- Error porque no puede insertar el null
-DECLARE @myProducts TVP_OrderProducts
-INSERT @myProducts VALUES 
-('AguacateX', 5),
-('MangoX', 10),
-('PipaX', 2)
+-- -- Error porque no puede insertar el null
+-- DECLARE @myProducts TVP_OrderProducts
+-- INSERT @myProducts VALUES 
+-- ('AguacateX', 5),
+-- ('MangoX', 10),
+-- ('PipaX', 2)
 
-exec dbo.[FeriaSP_PlaceOrder] 3, 1,'2023-02-25 20:30:00', 1, 1, 0, @myProducts
-select * from Orders where id_client = 3
+-- exec dbo.[FeriaSP_PlaceOrder] 3, 1,'2023-02-25 20:30:00', 1, 1, 0, @myProducts
+-- select * from Orders where id_client = 3
 
 GO
 -----------------------------------------------------------
