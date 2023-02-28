@@ -1274,3 +1274,25 @@ INNER JOIN Districts
 ON Districts.id_district = Addresses.id_district
 INNER JOIN States
 ON States.id_state = Districts.id_state
+
+GO
+-----------------------------------------------------------
+-- Punto 1: demostrar bajo que circustancias en su modelo podrían suceder problemas de dirty read, lost update y phantoms
+-- Autor: EGuzmán
+-- Fecha: 02/22/2023
+-----------------------------------------------------------
+
+
+-----------------------------------------------------------
+-- Lost Update 
+-----------------------------------------------------------
+SELECT total_quantity FROM Products WHERE id_product = 1
+--terminal 1
+BEGIN TRANSACTION
+UPDATE Products SET total_quantity = total_quantity - 1 WHERE id_product = 1
+-- ejecutar la terminal 2 antes
+COMMIT TRANSACTION
+--terminal 2 
+BEGIN TRANSACTION
+UPDATE Products SET total_quantity = total_quantity - 10 WHERE id_product = 1
+COMMIT TRANSACTION
